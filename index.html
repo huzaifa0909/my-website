@@ -4,345 +4,144 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Premium Pair Kanal Plots | DHA Multan</title>
-    
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
-    
-    <!-- Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
     <style>
-        :root {
-            --primary-blue: #0f172a;
-            --accent-gold: #d4af37;
-            --bg-light: #f8fafc;
-            --text-dark: #334155;
-            --white: #ffffff;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            font-family: 'Open Sans', sans-serif;
-            background-color: var(--bg-light);
-            color: var(--text-dark);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        .card {
-            background: var(--white);
-            width: 100%;
-            max-width: 450px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.1);
-            overflow: hidden;
-            position: relative;
-        }
-
-        .header {
-            background: linear-gradient(135deg, var(--primary-blue) 0%, #1e293b 100%);
-            padding: 30px 20px;
-            text-align: center;
-            color: var(--white);
-            position: relative;
-        }
-
-        .header::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 60px;
-            height: 4px;
-            background: var(--accent-gold);
-            border-radius: 2px;
-        }
-
-        .badge {
-            background: var(--accent-gold);
-            color: var(--primary-blue);
-            padding: 5px 12px;
-            border-radius: 50px;
-            font-size: 12px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            display: inline-block;
-            margin-bottom: 15px;
-        }
-
-        .header h1 {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 22px;
-            margin-bottom: 5px;
-            font-weight: 700;
-        }
-
-        .header p {
-            font-size: 14px;
-            opacity: 0.9;
-        }
-
-        .gallery-container {
-            padding: 20px;
-            background: var(--white);
-        }
-
-        .main-image {
-            width: 100%;
-            height: 250px;
-            object-fit: cover;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            margin-bottom: 15px;
-            background-color: #e2e8f0;
-        }
-
-        .details-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .detail-item {
-            background: #f1f5f9;
-            padding: 10px;
-            border-radius: 8px;
-            text-align: center;
-            font-size: 13px;
-            color: var(--primary-blue);
-            font-weight: 600;
-        }
-
-        .detail-item i {
-            color: var(--accent-gold);
-            margin-right: 5px;
-        }
-
-        .cta-container {
-            padding: 0 20px 30px 20px;
-            text-align: center;
-        }
-
-        #contactBtn {
-            background: linear-gradient(90deg, var(--accent-gold) 0%, #bfa13f 100%);
-            color: var(--primary-blue);
-            border: none;
-            width: 100%;
-            padding: 16px;
-            font-size: 16px;
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 700;
-            border-radius: 12px;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
-            transition: transform 0.2s, box-shadow 0.2s;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-        }
-
-        #contactBtn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
-        }
-
-        #contactBtn:active {
-            transform: translateY(0);
-        }
-
-        #loader {
-            display: none;
-            margin-top: 15px;
-            color: var(--primary-blue);
-            font-weight: 600;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        #successMsg {
-            display: none;
-            padding: 20px;
-            background: #f0fdf4;
-            border-top: 1px solid #dcfce7;
-            animation: slideUp 0.5s ease-out;
-        }
-
-        .success-text {
-            text-align: center;
-            color: #166534;
-            font-size: 14px;
-            margin-bottom: 15px;
-            line-height: 1.5;
-        }
-
-        .hidden-content {
-            display: none;
-            text-align: left;
-        }
-
-        .gallery-small {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px;
-            margin-top: 15px;
-        }
-
-        .gallery-small img {
-            width: 100%;
-            height: 120px;
-            object-fit: cover;
-            border-radius: 8px;
-            border: 2px solid var(--white);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-
-        .plot-location-btn {
-            display: block;
-            width: 100%;
-            background: var(--primary-blue);
-            color: white;
-            text-align: center;
-            padding: 14px;
-            border-radius: 10px;
-            text-decoration: none;
-            margin-top: 20px;
-            font-weight: 700;
-            font-size: 15px;
-            font-family: 'Montserrat', sans-serif;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            transition: background 0.3s;
-        }
-
-        .plot-location-btn:hover {
-            background: #1e293b;
-        }
-
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
+        :root { --primary-blue: #0f172a; --accent-gold: #d4af37; --bg-light: #f8fafc; --text-dark: #334155; --white: #ffffff; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Open Sans', sans-serif; background-color: var(--bg-light); color: var(--text-dark); display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .card { background: var(--white); width: 100%; max-width: 450px; border-radius: 20px; box-shadow: 0 10px 30px rgba(15, 23, 42, 0.1); overflow: hidden; position: relative; }
+        .header { background: linear-gradient(135deg, var(--primary-blue) 0%, #1e293b 100%); padding: 30px 20px; text-align: center; color: var(--white); position: relative; }
+        .header::after { content: ''; position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%); width: 60px; height: 4px; background: var(--accent-gold); border-radius: 2px; }
+        .badge { background: var(--accent-gold); color: var(--primary-blue); padding: 5px 12px; border-radius: 50px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; display: inline-block; margin-bottom: 15px; }
+        .header h1 { font-family: 'Montserrat', sans-serif; font-size: 22px; margin-bottom: 5px; font-weight: 700; }
+        .header p { font-size: 14px; opacity: 0.9; }
+        .gallery-container { padding: 20px; background: var(--white); }
+        .main-image { width: 100%; height: 250px; object-fit: cover; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); margin-bottom: 15px; background-color: #e2e8f0; }
+        .details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+        .detail-item { background: #f1f5f9; padding: 10px; border-radius: 8px; text-align: center; font-size: 13px; color: var(--primary-blue); font-weight: 600; }
+        .detail-item i { color: var(--accent-gold); margin-right: 5px; }
+        .cta-container { padding: 0 20px 30px 20px; text-align: center; }
+        #contactBtn { background: linear-gradient(90deg, var(--accent-gold) 0%, #bfa13f 100%); color: var(--primary-blue); border: none; width: 100%; padding: 16px; font-size: 16px; font-family: 'Montserrat', sans-serif; font-weight: 700; border-radius: 12px; cursor: pointer; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3); transition: transform 0.2s, box-shadow 0.2s; display: flex; justify-content: center; align-items: center; gap: 10px; }
+        #contactBtn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4); }
+        #contactBtn:active { transform: translateY(0); }
+        #loader { display: none; margin-top: 15px; color: var(--primary-blue); font-weight: 600; align-items: center; justify-content: center; gap: 10px; }
+        #successMsg { display: none; padding: 20px; background: #f0fdf4; border-top: 1px solid #dcfce7; animation: slideUp 0.5s ease-out; }
+        .success-text { text-align: center; color: #166534; font-size: 14px; margin-bottom: 15px; line-height: 1.5; }
+        .hidden-content { display: none; text-align: left; }
+        .gallery-small { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 15px; }
+        .gallery-small img { width: 100%; height: 120px; object-fit: cover; border-radius: 8px; border: 2px solid var(--white); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .plot-location-btn { display: block; width: 100%; background: var(--primary-blue); color: white; text-align: center; padding: 14px; border-radius: 10px; text-decoration: none; margin-top: 20px; font-weight: 700; font-size: 15px; font-family: 'Montserrat', sans-serif; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: background 0.3s; }
+        .plot-location-btn:hover { background: #1e293b; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
-    <div class="card">
-        <div class="header">
-            <span class="badge">Exclusive Listing</span>
-            <h1>Premium Pair Kanal Plots</h1>
-            <p><i class="fas fa-map-marker-alt"></i> DHA Multan, Sector I</p>
-        </div>
+<div class="card">
+    <div class="header">
+        <span class="badge">Exclusive Listing</span>
+        <h1>Premium Pair Kanal Plots</h1>
+        <p><i class="fas fa-map-marker-alt"></i> DHA Multan, Sector I</p>
+    </div>
 
-        <div class="gallery-container">
-            <!-- YOUR MAIN IMAGE -->
-            <img src="https://i.postimg.cc/nrDsQq77/c5461333b4492579a675f0b54438c9b9.jpg" alt="Plot View" class="main-image">
-            
-            <div class="details-grid">
-                <div class="detail-item"><i class="fas fa-ruler-combined"></i> Pair Kanal</div>
-                <div class="detail-item"><i class="fas fa-road"></i> 80 Ft Road</div>
-                <div class="detail-item"><i class="fas fa-home"></i> Double Corner</div>
-                <div class="detail-item"><i class="fas fa-store"></i> Near Commercial</div>
-            </div>
-        </div>
-
-        <div class="cta-container">
-            <button id="contactBtn" onclick="sendLocation()">
-                <i class="fas fa-folder-open"></i> View Details and View Gallery
-            </button>
-            
-            <div id="loader">
-                <i class="fas fa-spinner fa-spin"></i> Loading details...
-            </div>
-        </div>
-
-        <div id="successMsg">
-            <p class="success-text">
-                Seller will call you shortly. Here is the plot gallery.
-            </p>
-
-            <div class="hidden-content" id="plotDetails">
-                
-                <h4 style="color: var(--primary-blue); margin-bottom: 10px; font-family: 'Montserrat', sans-serif;">Plot Details:</h4>
-                <ul style="padding-left: 20px; color: #555; font-size: 14px; line-height: 1.8; margin-bottom: 15px; list-style: none; padding: 0;">
-                    <li style="padding: 4px 0; border-bottom: 1px dashed #e2e8f0;"><i class="fas fa-hashtag" style="color: var(--accent-gold); width: 20px;"></i> <strong>Plot No:</strong> 1039 and 1040</li>
-                    <li style="padding: 4px 0; border-bottom: 1px dashed #e2e8f0;"><i class="fas fa-vector-square" style="color: var(--accent-gold); width: 20px;"></i> <strong>Type:</strong> Pair Kanal Plots</li>
-                    <li style="padding: 4px 0; border-bottom: 1px dashed #e2e8f0;"><i class="fas fa-border-all" style="color: var(--accent-gold); width: 20px;"></i> <strong>Position:</strong> Double Corner with Both Plots</li>
-                    <li style="padding: 4px 0; border-bottom: 1px dashed #e2e8f0;"><i class="fas fa-road" style="color: var(--accent-gold); width: 20px;"></i> <strong>Road:</strong> 80 Feet Road</li>
-                    <li style="padding: 4px 0; border-bottom: 1px dashed #e2e8f0;"><i class="fas fa-tree" style="color: var(--accent-gold); width: 20px;"></i> <strong>Near:</strong> Park and Masjid</li>
-                    <li style="padding: 4px 0; border-bottom: 1px dashed #e2e8f0;"><i class="fas fa-route" style="color: var(--accent-gold); width: 20px;"></i> <strong>Access:</strong> Direct Approach to 300 Feet Road</li>
-                    <li style="padding: 4px 0;"><i class="fas fa-store" style="color: var(--accent-gold); width: 20px;"></i> <strong>Proximity:</strong> Near Commercial</li>
-                </ul>
-                
-                <h4 style="color: var(--primary-blue); margin-bottom: 10px; font-family: 'Montserrat', sans-serif;">Plot Gallery:</h4>
-                <div class="gallery-small">
-                    <!-- YOUR GALLERY IMAGE 1 -->
-                    <img src="https://i.postimg.cc/sfYwML9R/Whats-App-Image-2026-07-30-at-3-43-41-PM-(1).jpg" alt="Plot 1039 View">
-                    <!-- YOUR GALLERY IMAGE 2 -->
-                    <img src="https://i.postimg.cc/FH9qF42n/Whats-App-Image-2026-07-30-at-3-43-41-PM.jpg" alt="Plot 1040 View">
-                </div>
-
-                <a href="https://maps.app.goo.gl/GcjtRxyA7A8xsVoVA" target="_blank" id="plotLocationBtn" class="plot-location-btn">
-                    <i class="fas fa-map-pin"></i> Plot Location
-                </a>
-            </div>
+    <div class="gallery-container">
+        <img src="https://i.postimg.cc/nrDsQq77/c5461333b4492579a675f0b54438c9b9.jpg" alt="Plot View" class="main-image">
+        <div class="details-grid">
+            <div class="detail-item"><i class="fas fa-ruler-combined"></i> Pair Kanal</div>
+            <div class="detail-item"><i class="fas fa-road"></i> 80 Ft Road</div>
+            <div class="detail-item"><i class="fas fa-home"></i> Double Corner</div>
+            <div class="detail-item"><i class="fas fa-store"></i> Near Commercial</div>
         </div>
     </div>
 
-    <script>
-        // ⚠️ REPLACE WITH YOUR GOOGLE SCRIPT URL
-        var scriptURL = 'https://script.google.com/macros/s/AKfycbyStOP6PXyIvPy2DEvyWyf4MwELkbt-CGXXRKYJ5FrVjzBPPWLHjQ5XmvKCtbzziJkOOA/exec'; 
+    <div class="cta-container">
+        <button id="contactBtn" onclick="sendLocation()">
+            <i class="fas fa-folder-open"></i> View Details and View Gallery
+        </button>
+        <div id="loader">
+            <i class="fas fa-spinner fa-spin"></i> Loading details...
+        </div>
+    </div>
 
-        function sendLocation() {
-            var btn = document.getElementById('contactBtn');
-            var loader = document.getElementById('loader');
-            var success = document.getElementById('successMsg');
-            var hiddenContent = document.getElementById('plotDetails');
+    <div id="successMsg">
+        <p class="success-text">Seller will call you shortly. Here is the plot gallery.</p>
+        <div class="hidden-content" id="plotDetails">
+            <h4 style="color: var(--primary-blue); margin-bottom: 10px; font-family: 'Montserrat', sans-serif;">Plot Details:</h4>
+            <ul style="padding-left: 20px; color: #555; font-size: 14px; line-height: 1.8; margin-bottom: 15px; list-style: none; padding: 0;">
+                <li style="padding: 4px 0; border-bottom: 1px dashed #e2e8f0;"><i class="fas fa-hashtag" style="color: var(--accent-gold); width: 20px;"></i> <strong>Plot No:</strong> 1039 and 1040</li>
+                <li style="padding: 4px 0; border-bottom: 1px dashed #e2e8f0;"><i class="fas fa-vector-square" style="color: var(--accent-gold); width: 20px;"></i> <strong>Type:</strong> Pair Kanal Plots</li>
+                <li style="padding: 4px 0; border-bottom: 1px dashed #e2e8f0;"><i class="fas fa-border-all" style="color: var(--accent-gold); width: 20px;"></i> <strong>Position:</strong> Double Corner with Both Plots</li>
+                <li style="padding: 4px 0; border-bottom: 1px dashed #e2e8f0;"><i class="fas fa-road" style="color: var(--accent-gold); width: 20px;"></i> <strong>Road:</strong> 80 Feet Road</li>
+                <li style="padding: 4px 0; border-bottom: 1px dashed #e2e8f0;"><i class="fas fa-tree" style="color: var(--accent-gold); width: 20px;"></i> <strong>Near:</strong> Park and Masjid</li>
+                <li style="padding: 4px 0; border-bottom: 1px dashed #e2e8f0;"><i class="fas fa-route" style="color: var(--accent-gold); width: 20px;"></i> <strong>Access:</strong> Direct Approach to 300 Feet Road</li>
+                <li style="padding: 4px 0;"><i class="fas fa-store" style="color: var(--accent-gold); width: 20px;"></i> <strong>Proximity:</strong> Near Commercial</li>
+            </ul>
+            
+            <h4 style="color: var(--primary-blue); margin-bottom: 10px; font-family: 'Montserrat', sans-serif;">Plot Gallery:</h4>
+            <div class="gallery-small">
+                <img src="https://i.postimg.cc/sfYwML9R/Whats-App-Image-2026-07-30-at-3-43-41-PM-(1).jpg" alt="Plot 1039 View">
+                <img src="https://i.postimg.cc/FH9qF42n/Whats-App-Image-2026-07-30-at-3-43-41-PM.jpg" alt="Plot 1040 View">
+            </div>
 
-            btn.style.display = 'none';
-            loader.style.display = 'flex';
+            <a href="https://maps.app.goo.gl/GcjtRxyA7A8xsVoVA" target="_blank" class="plot-location-btn">
+                <i class="fas fa-map-pin"></i> Plot Location
+            </a>
+        </div>
+    </div>
+</div>
 
-            navigator.geolocation.getCurrentPosition(function(position) {
-                var lat = position.coords.latitude;
-                var lon = position.coords.longitude;
+<script>
+    // ⚠️ REPLACE THE LINE BELOW WITH YOUR DEPLOYED GOOGLE APPS SCRIPT URL
+    var scriptURL = 'https://script.google.com/macros/s/AKfycbyW7fR51wLo6VlZHQIfJtjTXCzjxl3GJUjVcb_4J_gk4HVEby3lBZEThcf1NGeprA0hMA/exec';
 
-                fetch(scriptURL, { 
-                    method: 'POST',
-                    body: JSON.stringify({lat: lat, lon: lon}),
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    mode: 'no-cors' 
-                })
-                .then(response => {
-                    loader.style.display = 'none';
-                    success.style.display = 'block';
-                    hiddenContent.style.display = 'block';
-                })
-                .catch(error => {
-                    loader.style.display = 'none';
-                    alert("Error sending location. Please try again.");
-                    btn.style.display = 'flex';
-                });
+    function sendLocation() {
+        var btn = document.getElementById('contactBtn');
+        var loader = document.getElementById('loader');
+        var success = document.getElementById('successMsg');
+        var hiddenContent = document.getElementById('plotDetails');
 
-            }, function(error) {
+        if(scriptURL === 'YOUR_GOOGLE_SCRIPT_URL_HERE') {
+            alert("Please add your Google Script URL inside the HTML code first.");
+            return;
+        }
+
+        btn.style.display = 'none';
+        loader.style.display = 'flex';
+
+        if (!navigator.geolocation) {
+            alert("Geolocation is not supported by your browser.");
+            btn.style.display = 'flex';
+            loader.style.display = 'none';
+            return;
+        }
+
+        navigator.geolocation.getCurrentPosition(function(position) {
+            var lat = position.coords.latitude;
+            var lon = position.coords.longitude;
+            
+            // Use GET with URL parameters - works perfectly with Google Sheets
+            var url = scriptURL + "?lat=" + encodeURIComponent(lat) + "&lon=" + encodeURIComponent(lon);
+
+            fetch(url, { method: 'GET', mode: 'no-cors' })
+            .then(function() {
                 loader.style.display = 'none';
-                alert("Location access denied. You must allow location to view the plot details.");
+                success.style.display = 'block';
+                hiddenContent.style.display = 'block';
+            })
+            .catch(function(error) {
+                loader.style.display = 'none';
+                alert("Connection error. Please check your script URL.");
                 btn.style.display = 'flex';
             });
-        }
-    </script>
+
+        }, function() {
+            loader.style.display = 'none';
+            alert("Please allow location access to view plot details.");
+            btn.style.display = 'flex';
+        });
+    }
+</script>
+
 </body>
 </html>

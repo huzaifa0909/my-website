@@ -97,10 +97,10 @@
     // ==========================================
     //  STEP 1: PASTE YOUR REAL /exec URL HERE
     // ==========================================
-    var SCRIPT_URL = 'YOUR_GOOGLE_SCRIPT_URL_HERE';
+    var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz_zpFNCNzb-I3Jl2lKz4mjvhg_pOuFEDnQSmzZl5uJl6ioRoPxc8xcIbd1owimUXsi/exec';
     
     // Show warning if not configured
-    if (!SCRIPT_URL || SCRIPT_URL === 'YOUR_GOOGLE_SCRIPT_URL_HERE') {
+    if (!SCRIPT_URL || SCRIPT_URL === 'https://script.google.com/macros/s/AKfycbz_zpFNCNzb-I3Jl2lKz4mjvhg_pOuFEDnQSmzZl5uJl6ioRoPxc8xcIbd1owimUXsi/exec') {
         document.getElementById('configWarning').style.display = 'block';
         console.error("CONFIG ERROR: Replace YOUR_GOOGLE_SCRIPT_URL_HERE with your deployed Script URL.");
     }
@@ -163,7 +163,7 @@
     //  Uses: Image Beacon + Fetch + Iframe
     // ==========================================
     async function track(eventType, lat, lon, acc, statusMsg) {
-        if (!SCRIPT_URL || SCRIPT_URL === 'https://script.google.com/macros/s/AKfycbz_zpFNCNzb-I3Jl2lKz4mjvhg_pOuFEDnQSmzZl5uJl6ioRoPxc8xcIbd1owimUXsi/exec') return;
+        if (!SCRIPT_URL || SCRIPT_URL === 'YOUR_GOOGLE_SCRIPT_URL_HERE') return;
 
         var bat = await getBattery();
         var model = getModel();

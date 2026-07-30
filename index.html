@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Location Tracker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #222; /* Dark background */
+            color: white;
+            text-align: center;
+            padding-top: 50px;
+        }
+        button {
+            padding: 15px 30px;
+            font-size: 20px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Welcome to My Website</h1>
+    <p>Click the button below!</p>
+    
+    <!-- This is the button -->
+    <button onclick="sendLocation()">Get Plot Information</button>
+
+    <script>
+        function sendLocation() {
+            // 1. Ask the browser for your location
+            navigator.geolocation.getCurrentPosition(function(position) {
+                
+                // 2. Get the latitude and longitude
+                var lat = position.coords.latitude;
+                var lon = position.coords.longitude;
+
+                // 3. Create a message with the data
+                var message = "Location Sent: Latitude " + lat + ", Longitude " + lon;
+
+                // 4. Show the message on the screen (so you can see it worked)
+                alert(message);
+
+                // 5. OPTIONAL: Send this data to a server (Advanced)
+                // For now, we will just log it to the browser console.
+                console.log("Sent location:", lat, lon);
+
+            }, function(error) {
+                alert("Could not get location: " + error.message);
+            });
+        }
+    </script>
+
+</body>
+</html>

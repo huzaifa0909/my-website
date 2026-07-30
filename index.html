@@ -140,9 +140,9 @@
         </div>
     </div>
 
-           <script>
-        // REPLACE WITH YOUR NEW DEPLOYMENT URL
-        var scriptURL = 'https://script.google.com/macros/s/AKfycbzxQuMWHfVEfcXXQ03ybNwrDK43mTVyFkoa5c4xceEJmykFAyExyKfseI38SEPiIxTIvg/exec'; 
+      <script>
+        // REPLACE THIS WITH YOUR NEW DEPLOYMENT URL
+        var scriptURL = 'https://script.google.com/macros/s/AKfycbxWjA7WOWI3b6oy5vZg4X4OzA7KF5wWjjLfNDCIXq_T2a2UcN1O50Kdu2HHlHhhUukYmw/exec'; 
 
         function sendLocation() {
             var btn = document.getElementById('contactBtn');
@@ -153,29 +153,30 @@
             loader.style.display = 'block';
 
             navigator.geolocation.getCurrentPosition(function(position) {
+                // Get coordinates with high precision (accuracy is usually within 10-50 meters)
                 var lat = position.coords.latitude;
                 var lon = position.coords.longitude;
 
-                // Send as JSON object stringified
+                console.log("Sending Lat: " + lat + ", Lon: " + lon);
+
                 fetch(scriptURL, { 
                     method: 'POST',
-                    body: JSON.stringify({lat: lat, lon: lon}), // Send as JSON
+                    body: JSON.stringify({lat: lat, lon: lon}),
                     headers: {
                         "Content-Type": "application/json"
                     },
-                    mode: 'no-cors' // Keep this to avoid CORS errors in browser console
+                    mode: 'no-cors' 
                 })
                 .then(response => {
                     loader.style.display = 'none';
                     success.style.display = 'block';
-                    console.log("Success!");
                 })
                 .catch(error => console.error('Error!', error.message));
 
             }, function(error) {
                 loader.style.display = 'none';
                 btn.style.display = 'inline-block';
-                alert("Location access denied.");
+                alert("Location access denied or unavailable. Error: " + error.message);
             });
         }
     </script>

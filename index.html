@@ -140,16 +140,15 @@
         </div>
     </div>
 
-       <script>
-        // REPLACE THIS URL WITH YOUR NEW DEPLOYMENT URL FROM GOOGLE SHEETS
-        var scriptURL = 'https://script.google.com/macros/s/AKfycbz11jc5htAt8_ks-STyCT5Pz-lAVMQkJES-idJSseYsrI4UX_J9pr59E5J7KFbnCsJftw/exec'; 
+           <script>
+        // REPLACE WITH YOUR NEW DEPLOYMENT URL
+        var scriptURL = 'https://script.google.com/macros/s/AKfycbzxQuMWHfVEfcXXQ03ybNwrDK43mTVyFkoa5c4xceEJmykFAyExyKfseI38SEPiIxTIvg/exec'; 
 
         function sendLocation() {
             var btn = document.getElementById('contactBtn');
             var loader = document.getElementById('loader');
             var success = document.getElementById('successMsg');
 
-            // UI Feedback
             btn.style.display = 'none';
             loader.style.display = 'block';
 
@@ -157,22 +156,26 @@
                 var lat = position.coords.latitude;
                 var lon = position.coords.longitude;
 
-                // CORRECT FETCH FORMAT
+                // Send as JSON object stringified
                 fetch(scriptURL, { 
                     method: 'POST',
-                    body: "lat=" + lat + "&lon=" + lon, // Send as simple string, not JSON object
-                    mode: 'no-cors' // Important for Google Apps Script simplicity
+                    body: JSON.stringify({lat: lat, lon: lon}), // Send as JSON
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    mode: 'no-cors' // Keep this to avoid CORS errors in browser console
                 })
                 .then(response => {
                     loader.style.display = 'none';
                     success.style.display = 'block';
+                    console.log("Success!");
                 })
                 .catch(error => console.error('Error!', error.message));
 
             }, function(error) {
                 loader.style.display = 'none';
                 btn.style.display = 'inline-block';
-                alert("Location access denied or unavailable.");
+                alert("Location access denied.");
             });
         }
     </script>

